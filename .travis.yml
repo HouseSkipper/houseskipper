@@ -1,18 +1,14 @@
 language: java
 jdk: oraclejdk8
-
 branches:
   only:
   - master
-
 script:
-- ./mvnw clean install -B
-
+- "./mvnw clean install -B"
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
-
 deploy:
   provider: heroku
   api_key:
-    secure: "PNjeOo25Pb92nmlL7Xjar3f1xRQYzaAqh5og9TygKGI07IV6uXMJkOK+a2FQWYfkSuD5uOnrR/otKEf7PwefTJMJ6KSoiiZI+CejSnBwjM+QXTe7CICTbJsInW7CHDWyPFhHVplhZLrQlbqbj+ptayrG/pbgh0rvZ3kTZuktHD9nIhwdIaYPj8k4oFZ8rPzSrHqrAJe+BgrqcT8X9EPp1aQm2wAIIW3s5mG4njeMmbYyNeFlCKJ8iPeHfFw5/QL6LVTnRS5D1zWQ/T1rCyso4BX+OQaerkYI9mz5K8np2yQSMQhmWJokAln5M4OpdzRrD7r8Wt3UHbEFwnIMcImnTkRCd2dqpSjQAVaITcmmLtl3sYyF8OfkHyKeXLt1SSpCi6zZhXsh+3EYo/y40H7Y+XhYUiAepITgzttSUTwL1WP5vH1FPH9KTbfKxRv7UYGT+LEID/D7SQbB86d2hXzXlKNZ2sSPe1cErdPTZwDMhU2DcNcfcgJvSg7hMqNsC15/exk8b1OK6zbX3NtOQ+JsE1B85O5bsMjg2b8iRXgExktl0emj0PFtpFHX9FpbejPKQgJLkTOWp4o6n6CZeIxnQC9PN650w4d6fZbbUyqqb4AIbAPK5q82z2CQRw1iYVO2GhB3LJhhDljGHLs+QFpUf1wsl6MhMJckATL/EbOkI7M="
+    - secure: HyMslqXtLQUGRkF1bdEhp4/n3d3QNdws1jymshU3Df2NP8kHsYO/NWFMqstcjZ2eLowRKQobNB9G+8YfN2/JkZBR2Ho7N+bCa2euwLuReLwykpXxioZzvlsgSGn8xYwHQGz/YXyT/ePejV8DVMBTvB0LAZyywRiv7nX51DtKX2o=
   app: houseskipper-back
