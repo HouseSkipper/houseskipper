@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class TaskController {
 
@@ -18,19 +18,20 @@ public class TaskController {
     public TaskController(TaskRepository repository){
         this.repository = repository;
     }
-    @GetMapping("/Tasks")
+
+    @GetMapping("/tasks")
     @CrossOrigin(origins = "http://localhost:4200")
     public Collection<Task> tasksList(){
         return repository.findAll().stream()
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/Tasks")
+    @PostMapping("/tasks")
     public Task createTask(@Valid @RequestBody Task task) {
         return repository.save(task);
     }
 
-    @PutMapping("/Tasks/{taskId}")
+    @PutMapping("/tasks/{taskId}")
     public Task updateTask(@PathVariable Long taskId, @Valid @RequestBody Task taskRequest) {
         return repository.findById(taskId).map(task -> {
             task.setRoom(taskRequest.getRoom());
@@ -42,7 +43,7 @@ public class TaskController {
         }).orElseThrow(() -> new ResourceNotFoundException("TaskId " + taskId + " not found"));
     }
 
-    @DeleteMapping("/Tasks/{taskId}")
+    @DeleteMapping("/tasks/{taskId}")
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         return repository.findById(taskId).map(task -> {
             repository.delete(task);
