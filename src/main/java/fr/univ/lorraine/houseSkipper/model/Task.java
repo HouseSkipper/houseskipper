@@ -11,7 +11,6 @@ import java.util.Date;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class Task {
     @Id @GeneratedValue
     private Long id;
@@ -21,6 +20,8 @@ public class Task {
     private @NonNull String budget;
     private @NonNull Date start_date;
     private @NonNull String status;
+
+    public Task() {}
 
     public Task(String room, String description, String budget, Date start_date, String status) {
         this.room = room;
