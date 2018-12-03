@@ -1,6 +1,7 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
 
+import fr.univ.lorraine.houseSkipper.exceptions.UserEmailAlreadyExists;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +26,10 @@ public class UserController {
     @PostMapping("/sign-up")
     public void signUp(@RequestBody ApplicationUser applicationUser) {
         applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
-        UserRepository.save(applicationUser);
+        try {
+            UserRepository.save(applicationUser);
+        } catch(Exception e) {
+            throw new UserEmailAlreadyExists();
+        }
     }
 }
