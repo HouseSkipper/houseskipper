@@ -16,6 +16,7 @@ public class ApplicationUser {
     @Column(unique = true)
     private @NonNull String username; // email
     private @NonNull String password;
+    private @NonNull String telephone;
     private String token;
 
     public ApplicationUser(){
