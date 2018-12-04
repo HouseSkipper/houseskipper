@@ -26,5 +26,6 @@ public class UserController {
     public void signUp(@RequestBody ApplicationUser applicationUser) {
         applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
         UserRepository.save(applicationUser);
+        System.out.println(applicationUser.getId());
     }
 }
