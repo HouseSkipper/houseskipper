@@ -17,6 +17,7 @@ public class ApplicationUser {
     private @NonNull String username; // email
     private @NonNull String password;
     private @NonNull String telephone;
+    private @NonNull String role;
     private String token;
 
     public ApplicationUser(){

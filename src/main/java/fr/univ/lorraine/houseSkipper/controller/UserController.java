@@ -27,6 +27,7 @@ public class UserController {
     public void signUp(@RequestBody ApplicationUser applicationUser) {
         applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
         try {
+            System.out.println(applicationUser.toString());
             UserRepository.save(applicationUser);
         } catch(Exception e) {
             throw new UserEmailAlreadyExists();
