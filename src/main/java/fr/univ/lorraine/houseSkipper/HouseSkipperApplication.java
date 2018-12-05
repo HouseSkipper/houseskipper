@@ -1,6 +1,11 @@
 package fr.univ.lorraine.houseSkipper;
 
+import fr.univ.lorraine.houseSkipper.controller.RoomController;
+import fr.univ.lorraine.houseSkipper.model.House;
+import fr.univ.lorraine.houseSkipper.model.Room;
 import fr.univ.lorraine.houseSkipper.model.Task;
+import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
+import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +29,10 @@ public class HouseSkipperApplication {
 	}
 
 	@Bean
-	ApplicationRunner init(TaskRepository repository) {
+	ApplicationRunner init(TaskRepository repository, RoomRepository roomRepository, HouseRepository houseRepository) {
+		roomRepository.deleteAll();
+		houseRepository.deleteAll();
+		repository.deleteAll();
 		return args -> {
 			Stream.of(
 					new Task("X1", "X1","X1", new Date(), "En Attente"),
