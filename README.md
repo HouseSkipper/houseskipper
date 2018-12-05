@@ -11,7 +11,7 @@ curl -i -H "Content-Type: application/json" -X POST -d '{
     "password": "password"
 }' http://localhost:8080/login
 
-## Exemple de données pour le post lors d'un ajout d'une maison
+## Exemple de données pour le post lors d'un ajout d'une maison (l'utilisateur admin doit être créé avant)
 {
     "address": "5 rue marechal Gallieni",
     "amperage": "30",
