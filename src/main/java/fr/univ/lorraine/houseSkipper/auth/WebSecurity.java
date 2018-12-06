@@ -34,8 +34,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL, "/login").permitAll()
-                .anyRequest().permitAll()// TODO REPLACE (authenticated()) QUAND CONNEXION MARCHERA
+                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
@@ -51,7 +51,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("localhost:4200", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
 
