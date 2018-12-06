@@ -1,19 +1,8 @@
 package fr.univ.lorraine.houseSkipper;
 
-import fr.univ.lorraine.houseSkipper.controller.RoomController;
-import fr.univ.lorraine.houseSkipper.model.House;
-import fr.univ.lorraine.houseSkipper.model.Room;
-import fr.univ.lorraine.houseSkipper.model.Task;
-import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
-import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
-import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.Date;
-import java.util.stream.Stream;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
@@ -27,8 +16,8 @@ public class HouseSkipperApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HouseSkipperApplication.class, args);
 	}
-
-	@Bean
+/*
+@Bean
 	ApplicationRunner init(TaskRepository repository, RoomRepository roomRepository, HouseRepository houseRepository) {
 		roomRepository.deleteAll();
 		houseRepository.deleteAll();
@@ -46,4 +35,6 @@ public class HouseSkipperApplication {
 			repository.findAll().forEach(System.out::println);
 		};
 	}
+ */
+
 }

@@ -13,6 +13,7 @@ public class Task {
     @Id @GeneratedValue
     private Long id;
 
+    private @NonNull String username;
     private @NonNull String room;
     private @NonNull String description;
     private @NonNull String budget;
@@ -27,11 +28,12 @@ public class Task {
 
     public Task() {}
 
-    public Task(String room, String description, String budget, Date start_date, String status) {
+    public Task(String username, String room, String description, String budget, Date start_date, String status) {
         this.room = room;
         this.description = description;
         this.budget = budget;
         this.start_date = start_date;
         this.status = status;
+        this.username = username;
     }
 }
