@@ -3,6 +3,8 @@ package fr.univ.lorraine.houseSkipper.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NonNull;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,6 +31,18 @@ public class ApplicationUser {
     //@JsonIgnoreProperties("user")
     @JsonManagedReference
     private List<House> houses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    //@JsonIgnoreProperties("user")
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    private List<Skill> skills = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    //@JsonIgnoreProperties("user")
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    private List<Task> tasks = new ArrayList<>();
 
     public ApplicationUser(){
 

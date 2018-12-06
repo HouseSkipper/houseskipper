@@ -34,7 +34,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SIGN_UP_URL, "/login").permitAll()
                 .anyRequest().permitAll()// TODO REPLACE (authenticated()) QUAND CONNEXION MARCHERA
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

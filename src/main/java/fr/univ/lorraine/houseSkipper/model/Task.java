@@ -1,12 +1,10 @@
 package fr.univ.lorraine.houseSkipper.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -20,6 +18,12 @@ public class Task {
     private @NonNull String budget;
     private @NonNull Date start_date;
     private @NonNull String status;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    //@JsonIgnoreProperties("houses")
+    @JsonBackReference
+    private @NonNull ApplicationUser user;
 
     public Task() {}
 
