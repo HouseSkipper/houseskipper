@@ -52,15 +52,11 @@ public class HouseController {
         return houseRepository.findAll().stream().collect(Collectors.toList());
     }
 
-<<<<<<< Updated upstream
     @GetMapping("/{username}/houses")
     @CrossOrigin(origins = "http://localhost:4200")
     public Collection<House> houseList(@PathVariable String username){
         return houseRepository.findAllByUsername(username).stream().collect(Collectors.toList());
     }
-=======
-
->>>>>>> Stashed changes
 
     @DeleteMapping("/{username}/houses/{houseId}")
     @CrossOrigin(origins = "http://localhost:4200")
