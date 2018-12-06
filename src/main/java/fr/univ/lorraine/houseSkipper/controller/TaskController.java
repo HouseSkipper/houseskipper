@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:4200")
@@ -22,8 +23,7 @@ public class TaskController {
     @GetMapping("/tasks")
     @CrossOrigin(origins = "http://localhost:4200")
     public Collection<Task> tasksList(){
-        return repository.findAll().stream()
-                .collect(Collectors.toList());
+        return new ArrayList<>(repository.findAll());
     }
 
     @PostMapping("/tasks")

@@ -27,4 +27,5 @@
 .gitignore
 
 ### BDD ###
+\db
 /db
