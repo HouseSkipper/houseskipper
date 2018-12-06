@@ -6,6 +6,8 @@ import fr.univ.lorraine.houseSkipper.model.Room;
 import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,30 +29,20 @@ public class HouseController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/houses")
+    @PostMapping("/add/house")
     public House createHouse(@Valid @RequestBody House houseBody) {
         List<Room> rooms = houseBody.getRooms();
         houseBody.setRooms(null);
-        //House house = new House();
-        //house.setHouseName("test");
+
         ApplicationUser user =  this.userRepository.findByUsername(houseBody.getUsername());
         houseBody.setUser(user);
         House res = houseRepository.save(houseBody);
 
-        /*
-        Room room = new Room();
-        room.setRoomName("cuisine");
-        room.setHouse(house);
-        */
         for(Room room: rooms){
             room.setHouse(houseBody);
             roomRepository.save(room);
         }
 
-
-        //System.out.println(house1);
-        //House house1 =  this.houseRepository.save(house);
-        //house1.getRooms().get(0).setHouse(house1);
         return res;
     }
 
@@ -64,6 +56,20 @@ public class HouseController {
     @CrossOrigin(origins = "http://localhost:4200")
     public Collection<House> houseList(@PathVariable String username){
         return houseRepository.findAllByUsername(username).stream().collect(Collectors.toList());
+    }
+
+    @DeleteMapping("/{username}/houses/{houseId}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<?> deleteHouse(@PathVariable String  username, @PathVariable Long houseId) {
+        System.out.println("-----------------entre");
+        return houseRepository.findById(houseId).map(house -> {
+            if(house.getUsername().equals(username)){
+                houseRepository.delete(house);
+                return ResponseEntity.ok().build();
+            }else{
+                return ResponseEntity.badRequest().build();
+            }
+        }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la suppression"));
     }
 
 }
