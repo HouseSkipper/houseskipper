@@ -31,5 +31,9 @@ public class Skill {
     private @NonNull ApplicationUser user;
 
 
-
+    public Skill(String type, int nb_works, ApplicationUser user) {
+        this.setType(type);
+        this.setNb_works(nb_works);
+        this.setUser(user);
+    }
 }

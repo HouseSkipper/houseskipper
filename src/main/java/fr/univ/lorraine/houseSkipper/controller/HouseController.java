@@ -6,14 +6,11 @@ import fr.univ.lorraine.houseSkipper.model.Room;
 import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:4200")
