@@ -44,7 +44,7 @@ public class SkillController {
     @GetMapping("users/{userId}/skills")
     @CrossOrigin(origins = "http://localhost:4200")
     public String skillsList(@PathVariable Long userId){
-        return AuthenticationFacade.getAuthentication().get;
+        return AuthenticationFacade.getAuthentication().getName();
         //return userRepository.findById(userId).map((Function<ApplicationUser, Object>) ApplicationUser::getSkills);
     }
 
