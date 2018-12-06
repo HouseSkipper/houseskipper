@@ -1,5 +1,6 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
+import fr.univ.lorraine.houseSkipper.facades.AuthenticationFacade;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Skill;
 import fr.univ.lorraine.houseSkipper.repositories.SkillRepository;
@@ -42,8 +43,9 @@ public class SkillController {
 
     @GetMapping("users/{userId}/skills")
     @CrossOrigin(origins = "http://localhost:4200")
-    public Optional<Object> skillsList(@PathVariable Long userId){
-        return userRepository.findById(userId).map((Function<ApplicationUser, Object>) ApplicationUser::getSkills);
+    public String skillsList(@PathVariable Long userId){
+        return AuthenticationFacade.getAuthentication().get;
+        //return userRepository.findById(userId).map((Function<ApplicationUser, Object>) ApplicationUser::getSkills);
     }
 
     @DeleteMapping("users/{userId}/skills/{skillId}")
