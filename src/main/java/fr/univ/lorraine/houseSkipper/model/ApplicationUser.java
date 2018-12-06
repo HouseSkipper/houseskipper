@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NonNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -47,5 +48,11 @@ public class ApplicationUser {
     public ApplicationUser(){
 
     }
+
+    public List<Skill> getSkills(){
+        return skills;
+    }
+
+
 
 }
