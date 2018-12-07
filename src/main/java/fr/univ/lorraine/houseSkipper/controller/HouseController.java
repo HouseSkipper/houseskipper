@@ -1,5 +1,6 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
+import fr.univ.lorraine.houseSkipper.facades.AuthenticationFacade;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.House;
 import fr.univ.lorraine.houseSkipper.model.Room;
@@ -30,6 +31,7 @@ public class HouseController {
     }
 
     @PostMapping("/add/house")
+    @CrossOrigin(origins = "http://localhost:4200")
     public House createHouse(@Valid @RequestBody House houseBody) {
         List<Room> rooms = houseBody.getRooms();
         houseBody.setRooms(null);
@@ -58,12 +60,12 @@ public class HouseController {
         return houseRepository.findAllByUsername(username).stream().collect(Collectors.toList());
     }
 
-    @DeleteMapping("/{username}/houses/{houseId}")
+    @DeleteMapping("/houses/{houseId}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<?> deleteHouse(@PathVariable String  username, @PathVariable Long houseId) {
+    public ResponseEntity<?> deleteHouse(@PathVariable Long houseId) {
         System.out.println("-----------------entre");
         return houseRepository.findById(houseId).map(house -> {
-            if(house.getUsername().equals(username)){
+            if(house.getUsername().equals(AuthenticationFacade.getAuthentication().getName())){
                 houseRepository.delete(house);
                 return ResponseEntity.ok().build();
             }else{
