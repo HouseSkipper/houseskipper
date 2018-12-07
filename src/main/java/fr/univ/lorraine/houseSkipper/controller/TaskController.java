@@ -3,15 +3,12 @@ package fr.univ.lorraine.houseSkipper.controller;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Task;
 import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
-import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -42,6 +39,7 @@ public class TaskController {
     }
 
     @PutMapping("tasks/{taskId}")
+    @CrossOrigin(origins = "http://localhost:4200")
     public Task updateTask(@PathVariable Long taskId, @Valid @RequestBody Task taskRequest) {
         return repository.findById(taskId).map(task -> {
             if (task.getUser().equals(authenticatedUserService.getAuthenticatedUser())) {
@@ -58,6 +56,7 @@ public class TaskController {
 
     @DeleteMapping("tasks/{taskId}")
     @CrossOrigin(origins = "http://localhost:4200")
+
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         return repository.findById(taskId).map(task -> {
             repository.delete(task);
