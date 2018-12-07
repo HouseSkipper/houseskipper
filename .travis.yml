@@ -11,7 +11,7 @@ script:
 
 before_install:
 - sudo service mysql stop
-- docker-compose up
+- docker-compose up -d
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
 deploy:
