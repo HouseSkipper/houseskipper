@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -28,7 +29,7 @@ public class TaskController {
 
     @GetMapping("tasks")
     @CrossOrigin(origins = "http://localhost:4200")
-    public Collection<Task> tasksList(@PathVariable String username){
+    public List<Task> tasksList(){
         return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
 
@@ -56,6 +57,7 @@ public class TaskController {
     }
 
     @DeleteMapping("tasks/{taskId}")
+    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         return repository.findById(taskId).map(task -> {
             repository.delete(task);
