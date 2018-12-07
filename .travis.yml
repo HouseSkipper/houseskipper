@@ -10,8 +10,6 @@ script:
 - "./mvnw clean install -B"
 
 before_install:
-- docker pull mysql
-- docker pull phpmyadmin/phpmyadmin
 - sudo service mysql stop
 - docker-compose up
 notifications:
