@@ -65,7 +65,6 @@ public class HouseController {
     @DeleteMapping("/houses/{houseId}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> deleteHouse(@PathVariable Long houseId) {
-        System.out.println("-----------------entre");
         return houseRepository.findById(houseId).map(house -> {
             if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
                 houseRepository.delete(house);
