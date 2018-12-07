@@ -1,4 +1,3 @@
-
 language: java
 jdk: oraclejdk8
 services:
@@ -8,7 +7,6 @@ branches:
   - master
 script:
 - "./mvnw clean install -DskipTests -B"
-
 before_install:
 - sudo service mysql stop
 - docker-compose up -d
@@ -17,6 +15,6 @@ notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
 deploy:
   provider: heroku
-  api_key:
-    secure: Gw3R58gk8kNYnee7N990r4eNk6GCYmq2/D8Bt08HOZoz4w+tJ+hExSIyP2YTotHE3MzfPdYSEKZwTOhLTx1DcOv0ISvmLuywGs496CBca8i7h6gO5lPCVcMPw0ryenbubRZKIEOyBqCePLZYqLgNUOFZ/fhDUB1Ni4+Ah3FH+fVMVKnMyFiVJ7BYKnvOt+PuNEZXMaW8vFTwxNKfSir36v4UC6Na8Q55rSKtiOdcIDEotQ+sQpVzDKaymDYtkDWuR66y/4fTpWyeow4DpwRfrl4CGfqRGtN6FZeAXajT4ES4D1/lmzYLk0tg18Qh0iEuD1QmhHuvpHdZ7PQgG4aoJC91rSRbuQJmFGsieLjrI2Kog6Sf+7l5UkBv8duGi1eoKKoH6qKTkDh2qFXGBXacsUun3BWV3aekTytWNC4v/gjXfC8YrlXuFPyPBiWMhshaxBHszy1LN406mfFw56+L0XRK1Px6TOC3zlOFyBfmyjrbvpvT/52pXy0nWAavZ2phc9OztRg2WBYuWBbtlnkw1arj/+3/7R6avIzyIiBclJl+O7zy90NER98tk/Y96JARXEDkxjDGizI/8TD2hVpMgkjLca+R5zxB74YskWRCF3fAE9hByYslbb2VgpxhU8ApchI81kTGCTizbky34E372tOdJh30hHn97nfRJ9/qX9s=
   app: houseskipper-back
+  api_key:
+    secure: A62QPUpEqPvTxTelcuknNzKNw/DQP4JH3vkSY1PPEDA05nqgygYaniz8m3M8hyOw0RpJ2561YuR9A4pGcQMxAu+qOk8iWrlS8LlDdftoV3WJbhntE8v2W0e+dtGdrmMehLrElaA6bMnbreSCI7t9ePrixFtShyS6bW/wevIKR56FXwS4+1Pvyl1UyrEgMbrASJIX8kldSo5QOexlszdMSr0tr9TwsER68dbsh2KJWlkwcK1kQnm9H6P9o7ebzVaqUTSrllbuDok1/cIQETzWKvENt4Z3Dd3kxzq+Ytakb58Dh1DxqZmBzZFedp11Xa71swQxGmmI85ZmQwsd/4IX1CPzREx5o1tEinBc0Pz+pwuhOQ7HvhqvMM3YklxfhmHf4rl5lMddlLNGVdhBc13aeYYp6yaHI6r+Zg4Zi5vjgVw3zWRJx5LK/o4tlW5lcQ02TydAvz2sF9YuxiBYBZhnYZGy8uFamJdrcd+JpFFfg2X6ekTfO4ELWbG2z/VbTzlq4wjON0abCgbRIEUCML+2XBwTEPHbrGVV9AAX94OsI6ytQJojqEGQBBfU69g2Geym52eiqJ+T5j8JvUNO1eGarxvHIT/7fhraeqqHqqTgPO+NNQubrHixfIUri1hY629w7+kw9peBa9kAbUchZCmnO0gcT89TV74fckQFrHM/+cE=
