@@ -10,5 +10,4 @@ import java.util.List;
 @RepositoryRestResource
 @CrossOrigin(origins = "http://localhost:4200")
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    List<Task> findAllByUsername(String username);
 }

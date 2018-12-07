@@ -18,20 +18,18 @@ import java.util.Collection;
 public class TaskController {
 
     private TaskRepository repository;
-    private UserRepository userRepository;
     private AuthenticatedUserService authenticatedUserService;
 
-    public TaskController(TaskRepository repository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService){
+    public TaskController(TaskRepository repository, AuthenticatedUserService authenticatedUserService){
 
         this.repository = repository;
-        this.userRepository = userRepository;
         this.authenticatedUserService = authenticatedUserService;
     }
 
     @GetMapping("tasks")
     @CrossOrigin(origins = "http://localhost:4200")
     public Collection<Task> tasksList(@PathVariable String username){
-        return new ArrayList<>(repository.findAllByUsername(username));
+        return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
 
     @PostMapping("tasks")
