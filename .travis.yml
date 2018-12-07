@@ -6,11 +6,11 @@ branches:
   only:
   - master
 script:
+-  sudo chmod -R 777 db_houseskipper
 - "./mvnw clean install -DskipTests -B"
 before_install:
 - sudo service mysql stop
 - docker-compose up -d
-- sudo chmod -R 777 db_houseskipper
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
 deploy:
