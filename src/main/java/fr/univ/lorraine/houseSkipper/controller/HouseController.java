@@ -6,6 +6,7 @@ import fr.univ.lorraine.houseSkipper.model.Room;
 import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +23,22 @@ public class HouseController {
     private HouseRepository houseRepository;
     private RoomRepository roomRepository;
     private UserRepository userRepository;
+    private AuthenticatedUserService authenticatedUserService;
 
-    public HouseController(HouseRepository repository, RoomRepository roomRepository, UserRepository userRepository){
+    public HouseController(HouseRepository repository, RoomRepository roomRepository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService){
         this.houseRepository = repository;
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
+        this.authenticatedUserService = authenticatedUserService;
     }
 
     @PostMapping("/add/house")
+    @CrossOrigin(origins = "http://localhost:4200")
     public House createHouse(@Valid @RequestBody House houseBody) {
         List<Room> rooms = houseBody.getRooms();
         houseBody.setRooms(null);
 
-        ApplicationUser user =  this.userRepository.findByUsername(houseBody.getUsername());
+        ApplicationUser user =  this.authenticatedUserService.getAuthenticatedUser();
         houseBody.setUser(user);
         House res = houseRepository.save(houseBody);
 
@@ -52,18 +56,18 @@ public class HouseController {
         return houseRepository.findAll().stream().collect(Collectors.toList());
     }
 
-    @GetMapping("/{username}/houses")
+    @GetMapping("/houses/house")
     @CrossOrigin(origins = "http://localhost:4200")
-    public Collection<House> houseList(@PathVariable String username){
-        return houseRepository.findAllByUsername(username).stream().collect(Collectors.toList());
+    public Collection<House> MyhousesList(){
+        return houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser()).stream().collect(Collectors.toList());
     }
 
-    @DeleteMapping("/{username}/houses/{houseId}")
+    @DeleteMapping("/houses/{houseId}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<?> deleteHouse(@PathVariable String  username, @PathVariable Long houseId) {
+    public ResponseEntity<?> deleteHouse(@PathVariable Long houseId) {
         System.out.println("-----------------entre");
         return houseRepository.findById(houseId).map(house -> {
-            if(house.getUsername().equals(username)){
+            if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
                 houseRepository.delete(house);
                 return ResponseEntity.ok().build();
             }else{
