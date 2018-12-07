@@ -1,11 +1,19 @@
 
 language: java
 jdk: oraclejdk8
+services:
+- docker
 branches:
   only:
-    - master
+  - master
 script:
-  - "./mvnw clean install -B"
+- "./mvnw clean install -B"
+
+before_install:
+- docker pull mysql
+- docker pull phpmyadmin/phpmyadmin
+- sudo service mysql stop
+- docker-compose up
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
 deploy:
