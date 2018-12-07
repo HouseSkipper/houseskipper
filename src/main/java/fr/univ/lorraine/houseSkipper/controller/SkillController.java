@@ -27,13 +27,13 @@ public class SkillController {
 
     }
 
-    @PostMapping("users/{userId}/skills")
+    @PostMapping("skills")
     public @Valid Skill createSkill(@Valid @RequestBody Skill skill) {
         return skillRepository.save(skill);
     }
 
-    @PutMapping("users/{userId}/skills/{skillId}")
-    public Skill updateSkill(@PathVariable Long skillId, @Valid @RequestBody Skill skillRequest, @PathVariable String userId) {
+    @PutMapping("skills/{skillId}")
+    public Skill updateSkill(@PathVariable Long skillId, @Valid @RequestBody Skill skillRequest) {
         return skillRepository.findById(skillId).map(skill -> {
             skill.setType(skillRequest.getType());
             skill.setNb_works(skillRequest.getNb_works());
@@ -42,13 +42,14 @@ public class SkillController {
         }).orElseThrow(() -> new ResourceNotFoundException("skillId " + skillId + " not found"));
     }
 
-    @GetMapping("users/{userId}/skills")
+    @GetMapping("skills")
     @CrossOrigin(origins = "http://localhost:4200")
-    public List<Skill> skillsList(@PathVariable Long userId){
+    public List<Skill> skillsList(){
         return authenticatedUserService.getAuthenticatedUser().getSkills();
+
     }
 
-    @DeleteMapping("users/{userId}/skills/{skillId}")
+    @DeleteMapping("skills/{skillId}")
     public ResponseEntity<?> deleteSkill(@PathVariable Long skillId) {
         return skillRepository.findById(skillId).map(skill -> {
             skillRepository.delete(skill);

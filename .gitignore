@@ -24,8 +24,21 @@
 /nbdist/
 /.nb-gradle/
 
+/db/
+
 .gitignore
 
-### BDD ###
-\.db
-\db
+
+*.ibt
+
+*.cnf
+
+*.ibd
+
+*.000002
+
+*.000001
+
+*.index
+
+*.pem

@@ -41,3 +41,7 @@ curl -i -H "Content-Type: application/json" -X POST -d '{
     "standardTypeNumber": "1",
     "username":"admin"
 }
+
+## Exemple commande docker
+docker-compose up -d
+docker-compose down
