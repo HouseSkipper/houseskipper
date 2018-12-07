@@ -12,6 +12,7 @@ script:
 before_install:
 - docker pull mysql
 - docker pull phpmyadmin/phpmyadmin
+- sudo service mysql stop
 - docker-compose up
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
