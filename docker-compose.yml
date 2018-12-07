@@ -10,7 +10,7 @@ services:
                 - MYSQL_ROOT_PASSWORD=houseskipper
                 - MYSQL_ROOT_HOST=%
       volumes:
-            - ./db:/var/lib/mysql
+            - ./db_houseskipper:/var/lib/mysql
       ports:
             - "3306:3306"
     phpmyadmin:
