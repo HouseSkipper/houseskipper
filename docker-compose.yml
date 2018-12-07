@@ -8,6 +8,7 @@ services:
                 - MYSQL_USER=houseskipper
                 - MYSQL_PASSWORD=houseskipper
                 - MYSQL_ROOT_PASSWORD=houseskipper
+                - MYSQL_ROOT_HOST=%
       volumes:
             - ./db:/var/lib/mysql
       ports:
