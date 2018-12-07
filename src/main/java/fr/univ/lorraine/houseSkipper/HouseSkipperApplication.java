@@ -7,6 +7,7 @@ import fr.univ.lorraine.houseSkipper.model.Task;
 import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
+import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,10 +30,12 @@ public class HouseSkipperApplication {
 	}
 
 	@Bean
-	ApplicationRunner init(TaskRepository repository, RoomRepository roomRepository, HouseRepository houseRepository) {
+	ApplicationRunner init(TaskRepository taskRepository, RoomRepository roomRepository, HouseRepository houseRepository, UserRepository userRepository) {
 		roomRepository.deleteAll();
 		houseRepository.deleteAll();
-		repository.deleteAll();
+		taskRepository.deleteAll();
+		userRepository.deleteAll();
+
 		return args -> {
 			Stream.of(
 					new Task("X1", "X1","X1", new Date(), "En Attente"),
@@ -40,10 +43,10 @@ public class HouseSkipperApplication {
 					new Task("X3", "X3","X3", new Date(), "En Attente"),
 					new Task("X4", "X4","X4", new Date(), "En Attente")
 			).forEach(task -> {
-				repository.save(task);
+				taskRepository.save(task);
 			});
 			// Query database
-			repository.findAll().forEach(System.out::println);
+			taskRepository.findAll().forEach(System.out::println);
 		};
 	}
 }

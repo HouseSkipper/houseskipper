@@ -12,7 +12,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 public interface UserRepository extends JpaRepository<ApplicationUser, Long>{
 
-    public ApplicationUser findByUsername(String email);
+    public ApplicationUser findByUsername(String username);
 
 
 }

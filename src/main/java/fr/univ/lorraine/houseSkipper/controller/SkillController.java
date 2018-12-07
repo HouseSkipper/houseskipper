@@ -1,17 +1,15 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
-import fr.univ.lorraine.houseSkipper.facades.AuthenticationFacade;
-import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Skill;
 import fr.univ.lorraine.houseSkipper.repositories.SkillRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -19,10 +17,13 @@ public class SkillController {
 
     private SkillRepository skillRepository;
     private UserRepository userRepository;
+    private AuthenticatedUserService authenticatedUserService;
 
 
-    public SkillController(SkillRepository skillRepository, UserRepository userRepository){
+    public SkillController(SkillRepository skillRepository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService){
         this.skillRepository = skillRepository;
+        this.userRepository = userRepository;
+        this.authenticatedUserService = authenticatedUserService;
 
     }
 
@@ -43,9 +44,8 @@ public class SkillController {
 
     @GetMapping("users/{userId}/skills")
     @CrossOrigin(origins = "http://localhost:4200")
-    public String skillsList(@PathVariable Long userId){
-        return AuthenticationFacade.getAuthentication().get;
-        //return userRepository.findById(userId).map((Function<ApplicationUser, Object>) ApplicationUser::getSkills);
+    public List<Skill> skillsList(@PathVariable Long userId){
+        return authenticatedUserService.getAuthenticatedUser().getSkills();
     }
 
     @DeleteMapping("users/{userId}/skills/{skillId}")
