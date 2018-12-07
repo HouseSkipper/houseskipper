@@ -12,6 +12,7 @@ script:
 before_install:
 - sudo service mysql stop
 - docker-compose up -d
+- sudo chmod -R 777 db_houseskipper
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
 deploy:
