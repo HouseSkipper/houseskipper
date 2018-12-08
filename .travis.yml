@@ -7,7 +7,7 @@ branches:
   - master
 script:
 -  sudo chmod -R 777 db_houseskipper
-- "./mvnw clean install -DskipTests -B"
+- "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 before_install:
 - sudo service mysql stop
 - docker-compose up -d
