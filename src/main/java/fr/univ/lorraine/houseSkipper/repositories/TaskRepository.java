@@ -8,6 +8,5 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 
 @RepositoryRestResource
-@CrossOrigin(origins = "${client.url}")
 public interface TaskRepository extends JpaRepository<Task, Long> {
 }

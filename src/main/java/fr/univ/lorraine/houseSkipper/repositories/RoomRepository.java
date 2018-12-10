@@ -9,7 +9,6 @@ import java.util.List;
 
 
 @RepositoryRestResource
-@CrossOrigin(origins = "${client.url}")
 public interface RoomRepository extends JpaRepository<Room, Long>{
     public List<Room> findAllByHouse(String houseName);
 }

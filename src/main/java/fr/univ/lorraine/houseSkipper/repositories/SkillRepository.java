@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @RepositoryRestResource
-@CrossOrigin(origins = "${client.url}")
 public interface SkillRepository extends JpaRepository<Skill, Long>{
 
 }
