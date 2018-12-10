@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class TaskController {
 
@@ -25,7 +24,6 @@ public class TaskController {
     }
 
     @GetMapping("tasks")
-    @CrossOrigin(origins = "http://localhost:4200")
     public List<Task> tasksList(){
         return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
@@ -39,7 +37,6 @@ public class TaskController {
     }
 
     @PutMapping("tasks/{taskId}")
-    @CrossOrigin(origins = "http://localhost:4200")
     public Task updateTask(@PathVariable Long taskId, @Valid @RequestBody Task taskRequest) {
         return repository.findById(taskId).map(task -> {
             if (task.getUser().equals(authenticatedUserService.getAuthenticatedUser())) {
@@ -55,7 +52,6 @@ public class TaskController {
     }
 
     @DeleteMapping("tasks/{taskId}")
-    @CrossOrigin(origins = "http://localhost:4200")
 
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         return repository.findById(taskId).map(task -> {

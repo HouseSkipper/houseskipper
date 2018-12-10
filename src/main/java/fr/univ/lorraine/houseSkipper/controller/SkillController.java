@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class SkillController {
 
@@ -43,7 +42,6 @@ public class SkillController {
     }
 
     @GetMapping("skills")
-    @CrossOrigin(origins = "http://localhost:4200")
     public List<Skill> skillsList(){
         return authenticatedUserService.getAuthenticatedUser().getSkills();
 

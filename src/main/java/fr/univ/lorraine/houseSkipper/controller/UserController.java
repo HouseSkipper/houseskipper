@@ -24,7 +24,6 @@ public class UserController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/sign-up")
     public void signUp(@RequestBody ApplicationUser applicationUser) {
         applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));

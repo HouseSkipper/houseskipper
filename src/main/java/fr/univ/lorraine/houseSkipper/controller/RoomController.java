@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class RoomController {
 
@@ -27,7 +26,6 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    @CrossOrigin(origins = "http://localhost:4200")
     public Collection<Room> roomList(){
         ApplicationUser user = this.authenticatedUserService.getAuthenticatedUser();
         List<House> houses = user.getHouses();
@@ -45,7 +43,6 @@ public class RoomController {
     }
 
     @GetMapping("/{houseName}/rooms")
-    @CrossOrigin(origins = "http://localhost:4200")
     public Collection<Room> houseList(@PathVariable String houseName){
         return repository.findAllByHouse(houseName).stream().collect(Collectors.toList());
     }

@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class HouseController {
 
@@ -33,7 +32,6 @@ public class HouseController {
     }
 
     @PostMapping("/add/house")
-    @CrossOrigin(origins = "http://localhost:4200")
     public House createHouse(@Valid @RequestBody House houseBody) {
         List<Room> rooms = houseBody.getRooms();
         houseBody.setRooms(null);
@@ -51,19 +49,16 @@ public class HouseController {
     }
 
     @GetMapping("/houses")
-    @CrossOrigin(origins = "http://localhost:4200")
     public Collection<House> houseList(){
         return houseRepository.findAll().stream().collect(Collectors.toList());
     }
 
     @GetMapping("/houses/house")
-    @CrossOrigin(origins = "http://localhost:4200")
     public Collection<House> MyhousesList(){
         return houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser()).stream().collect(Collectors.toList());
     }
 
     @DeleteMapping("/houses/{houseId}")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> deleteHouse(@PathVariable Long houseId) {
         return houseRepository.findById(houseId).map(house -> {
             if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
