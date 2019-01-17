@@ -1,16 +1,22 @@
 package fr.univ.lorraine.houseSkipper.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NonNull;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
 public class Task {
     @Id @GeneratedValue
+    @Column(name = "task_id")
     private Long id;
 
     private @NonNull String room;
@@ -24,6 +30,11 @@ public class Task {
     //@JsonIgnoreProperties("houses")
     @JsonBackReference
     private @NonNull ApplicationUser user;
+
+    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    private List<UploadFileResponse> files = new ArrayList<>();
 
     public Task() {}
 
