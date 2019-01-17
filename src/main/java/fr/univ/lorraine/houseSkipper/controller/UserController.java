@@ -6,6 +6,7 @@ import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Skill;
 import fr.univ.lorraine.houseSkipper.repositories.SkillRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,15 +27,18 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public void signUp(@RequestBody ApplicationUser applicationUser) {
-        applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
-        try {
+        ApplicationUser user = UserRepository.findByUsername(applicationUser.getUsername());
+        if(user != null){
+            throw new UserEmailAlreadyExists();
+        }else {
+            applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
             System.out.println(applicationUser.toString());
             UserRepository.save(applicationUser);
-            skillRepository.save(new Skill("Jardinage", 0, applicationUser));
-            skillRepository.save(new Skill("Plomberie", 0, applicationUser));
-
-        } catch(Exception e) {
-            throw new UserEmailAlreadyExists();
+            skillRepository.save(new Skill("Gros Oeuvres", 0, applicationUser));
+            skillRepository.save(new Skill("Seconds Oeuvres", 0, applicationUser));
+            skillRepository.save(new Skill("Petits travaux de bricolage", 0, applicationUser));
+            skillRepository.save(new Skill("Petits travaux de jardinage", 0, applicationUser));
+            skillRepository.save(new Skill("Aménagement paysager", 0, applicationUser));
         }
     }
 }

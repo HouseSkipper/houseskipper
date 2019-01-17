@@ -9,4 +9,5 @@ public class UserEmailAlreadyExists extends RuntimeException {
     public UserEmailAlreadyExists() {
         super();
     }
+
 }
