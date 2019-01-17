@@ -12,6 +12,5 @@ import java.util.List;
 @RepositoryRestResource
 public interface HouseRepository extends JpaRepository<House, Long>{
 
-    public List<House> findAllByUsername(String username);
     public List<House> findAllByUser(ApplicationUser user);
 }
