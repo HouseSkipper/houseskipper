@@ -29,7 +29,7 @@ public class UserController {
     public void signUp(@RequestBody ApplicationUser applicationUser) {
         ApplicationUser user = UserRepository.findByUsername(applicationUser.getUsername());
         if(user != null){
-            throw new UserEmailAlreadyExists(String.format("User with email %s already exist!", applicationUser.getUsername()));
+            throw new UserEmailAlreadyExists();
         }else {
             applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
             System.out.println(applicationUser.toString());
