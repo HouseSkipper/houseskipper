@@ -34,8 +34,11 @@ public class UserController {
             applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
             System.out.println(applicationUser.toString());
             UserRepository.save(applicationUser);
-            skillRepository.save(new Skill("Jardinage", 0, applicationUser));
-            skillRepository.save(new Skill("Plomberie", 0, applicationUser));
+            skillRepository.save(new Skill("Gros Oeuvres", 0, applicationUser));
+            skillRepository.save(new Skill("Seconds Oeuvres", 0, applicationUser));
+            skillRepository.save(new Skill("Petits travaux de bricolage", 0, applicationUser));
+            skillRepository.save(new Skill("Petits travaux de jardinage", 0, applicationUser));
+            skillRepository.save(new Skill("Aménagement paysager", 0, applicationUser));
         }
     }
 }
