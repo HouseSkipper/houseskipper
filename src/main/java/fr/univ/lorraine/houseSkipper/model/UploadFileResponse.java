@@ -2,6 +2,7 @@ package fr.univ.lorraine.houseSkipper.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "taskPJ")
+@NoArgsConstructor
 public class UploadFileResponse {
     @Id
     @GeneratedValue
@@ -20,11 +22,13 @@ public class UploadFileResponse {
     private @NonNull String fileType;
     private @NonNull long size;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     //@JsonIgnoreProperties("houses")
     @JsonBackReference
     private @NonNull Task task;
+
+
 
     public UploadFileResponse(String fileName, String fileDownloadUri, String fileType, long size) {
         this.fileName = fileName;

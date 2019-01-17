@@ -24,15 +24,17 @@ public class TaskController {
         this.authenticatedUserService = authenticatedUserService;
     }
 
-    @GetMapping("tasks")
+    @GetMapping("/tasks")
     public List<Task> tasksList(){
         return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
 
-    @PostMapping("tasks")
+    @PostMapping("/tasks")
     public Task createTask(@Valid @RequestBody Task task) {
         ApplicationUser user = authenticatedUserService.getAuthenticatedUser();
         task.setUser(user);
+        System.out.println(user.getFirstname()+"-------------------------------"+task.getBudget());
+        //task.setFiles(new ArrayList<UploadFileResponse>());
         return repository.save(task);
 
     }
@@ -53,7 +55,6 @@ public class TaskController {
     }
 
     @DeleteMapping("tasks/{taskId}")
-
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         return repository.findById(taskId).map(task -> {
             repository.delete(task);

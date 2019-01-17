@@ -15,9 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("http://localhost:4200")
@@ -30,28 +28,19 @@ public class FileController {
 
 
 
-    @PostMapping("/uploadFile")
+    @PostMapping("/uploadFile/{taskId}")
     @CrossOrigin("http://localhost:4200")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        String fileName = fileStorageService.storeFile(file);
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long taskId) {
+        String fileName = fileStorageService.storeFile(file, taskId);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(fileName)
                 .toUriString();
-        System.out.println(fileDownloadUri+ "---------!!!"+ fileName);
+        System.out.println(fileDownloadUri + "---------!!!" + fileName);
 
         return new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
-    }
-
-    @PostMapping("/uploadMultipleFiles")
-    @CrossOrigin("http://localhost:4200")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.asList(files)
-                .stream()
-                .map(file -> uploadFile(file))
-                .collect(Collectors.toList());
     }
 
     @GetMapping("/downloadFile/{fileName:.+}")

@@ -31,10 +31,12 @@ public class Task {
     @JsonBackReference
     private @NonNull ApplicationUser user;
 
-    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+@OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<UploadFileResponse> files = new ArrayList<>();
+
+
 
     public Task() {}
 
