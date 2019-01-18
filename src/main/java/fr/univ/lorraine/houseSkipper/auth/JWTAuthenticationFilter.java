@@ -59,6 +59,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         ApplicationUser currentUser = new ApplicationUser();
         currentUser.setUsername(((User) auth.getPrincipal()).getUsername());
+        currentUser.setToken(token);
         ObjectMapper o = new ObjectMapper();
         o.writeValue(res.getOutputStream(), currentUser);
     }
