@@ -16,6 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 
 import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.SIGN_UP_URL;
+import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.VALID_EMAIL;
 
 
 @EnableWebSecurity
@@ -39,6 +40,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, VALID_EMAIL).permitAll()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -1,6 +1,8 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
 
+import fr.univ.lorraine.houseSkipper.auth.JWTAuthenticationFilter;
+import fr.univ.lorraine.houseSkipper.exceptions.InvalidValidationTokenException;
 import fr.univ.lorraine.houseSkipper.exceptions.UserEmailAlreadyExists;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Skill;
@@ -42,6 +44,7 @@ public class UserController {
             applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
             System.out.println(applicationUser.toString());
             applicationUser.setEmailToken(RandomStringUtils.randomAlphanumeric(32));
+            applicationUser.setIsValid(false);
             UserRepository.save(applicationUser);
             skillRepository.save(new Skill("Gros Oeuvres", 0, applicationUser));
             skillRepository.save(new Skill("Seconds Oeuvres", 0, applicationUser));
@@ -56,9 +59,22 @@ public class UserController {
         }
     }
 
-    @GetMapping("validateAccount/{email_token}")
-    public void validateAccount(@PathVariable String email_token){
-        ApplicationUser user = UserRepository.findByEmailToken(email_token);
+    @GetMapping("validateAccount/{emailToken}")
+    public ApplicationUser validateAccount(@PathVariable String emailToken){
+        System.out.println("============== "+emailToken);
+        ApplicationUser user = UserRepository.findByEmailToken(emailToken);
+        if(user != null){
+            if(user.getIsValid()){
+                throw new InvalidValidationTokenException();
+            }else{
+                user.setIsValid(true);
+                UserRepository.save(user);
+                user.setToken(JWTAuthenticationFilter.createTokenByUser(user));
+                return user;
+            }
+        }else{
+            throw new InvalidValidationTokenException();
+        }
 
     }
 }

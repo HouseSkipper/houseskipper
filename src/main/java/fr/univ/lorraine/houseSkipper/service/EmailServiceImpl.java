@@ -58,8 +58,28 @@ public class EmailServiceImpl{
         helper.setSubject("Bienvenue sur Houseskipper");
 
 
-        String url = env.getProperty("client.url")+"/validateAccount/";
+        String url = env.getProperty("client.url")+"/#/validateAccount/";
         String html = "<html>Bonjour "+user.getFirstname()+"\n"+"Confirmez-votre inscription en cliquant sur le lien suivant : <a href='"+url+user.getEmailToken()+"'>Ici</a></html>";
+
+
+        message.setContent(html, "text/html");
+
+        javaMailSender.send(message);
+    }
+
+    // TODO Ne pas oublier de générer un nouveau emailToken et de le repasser à invalid
+    public void sendChangeConfirmationEmail(ApplicationUser user) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        boolean multipart = true;
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, multipart, "utf-8");
+
+        helper.setTo(user.getUsername());
+        helper.setSubject("Changement d'adresse email");
+
+
+        String url = env.getProperty("client.url")+"/#/validateAccount/";
+        String html = "<html>Bonjour "+user.getFirstname()+"\n"+"Veuillez confirmer votre nouvelle adresse email en cliquant : <a href='"+url+user.getEmailToken()+"'>Ici</a></html>";
 
 
         message.setContent(html, "text/html");

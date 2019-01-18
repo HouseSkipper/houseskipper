@@ -21,7 +21,7 @@ import java.util.Date;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.*;
 
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -59,7 +59,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         ApplicationUser currentUser = new ApplicationUser();
         currentUser.setUsername(((User) auth.getPrincipal()).getUsername());
+        currentUser.setToken(token);
         ObjectMapper o = new ObjectMapper();
         o.writeValue(res.getOutputStream(), currentUser);
+    }
+    public static String createTokenByUser(ApplicationUser user){
+        return JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .sign(HMAC512(SECRET.getBytes()));
     }
 }
