@@ -32,7 +32,7 @@ public class HouseController {
     }
 
     @PostMapping("/add/house")
-    public House createHouse(@Valid @RequestBody House houseBody) {
+    public ResponseEntity<?> createHouse(@Valid @RequestBody House houseBody) {
         List<Room> rooms = houseBody.getRooms();
         houseBody.setRooms(null);
 
@@ -45,7 +45,7 @@ public class HouseController {
             roomRepository.save(room);
         }
 
-        return res;
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/houses")
@@ -56,6 +56,31 @@ public class HouseController {
     @GetMapping("/houses/house")
     public Collection<House> MyhousesList(){
         return houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser()).stream().collect(Collectors.toList());
+    }
+
+    @GetMapping("/houses/{houseId}")
+    public House Myhouse(@PathVariable Long houseId){
+        return houseRepository.findById(houseId).map(house -> {
+            if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
+                return house;
+            }else{
+                return null;
+            }
+        }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la recherche d'une maison"));
+    }
+
+    @PutMapping("/houses/{houseId}")
+    public House modifierHouser(@Valid @RequestBody House houseBody){
+        return houseRepository.findById(houseBody.getId()).map(house -> {
+            if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
+                house = houseBody;
+                house.setUser(this.authenticatedUserService.getAuthenticatedUser());
+                houseRepository.save(house);
+                return house;
+            }else{
+                return null;
+            }
+        }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la modification d'une maison"));
     }
 
     @DeleteMapping("/houses/{houseId}")
