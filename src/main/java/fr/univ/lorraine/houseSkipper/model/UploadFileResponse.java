@@ -12,7 +12,6 @@ import javax.persistence.*;
 public class UploadFileResponse {
     @Id
     @GeneratedValue
-    @Column(name = "file_id")
     private Long id;
 
     private @NonNull String fileName;
