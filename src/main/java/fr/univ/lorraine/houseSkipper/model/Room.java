@@ -21,17 +21,17 @@ public class Room {
 
     private @NonNull String roomName;
     private @NonNull int space;
-    private @NonNull int nbFenetre;
-    private @NonNull int nbPorteFenetre;
-    private @NonNull String typeChauffage;
-    private @NonNull int nbRadiateur;
-    private @NonNull int volet;
-    private @NonNull int nbVolet;
+    private int nbFenetre;
+    private  int nbPorteFenetre;
+    private  String typeChauffage;
+    private  int nbRadiateur;
+    private  int volet;
+    private  int nbVolet;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "house_id")
     //@JsonIgnoreProperties("rooms")
     @JsonBackReference
-    private House house;
+    private @NonNull House house;
 
 }

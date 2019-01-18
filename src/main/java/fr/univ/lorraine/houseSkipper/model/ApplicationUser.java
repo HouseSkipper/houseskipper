@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NonNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import javax.persistence.*;
@@ -25,8 +26,10 @@ public class ApplicationUser {
     private @NonNull String password;
     private @NonNull String telephone;
     private @NonNull String role;
-    private String token;
-
+    private @NonNull String emailToken;
+    @Value("0")
+    private @NonNull Boolean isValid;
+    private String Token;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     //@JsonIgnoreProperties("user")

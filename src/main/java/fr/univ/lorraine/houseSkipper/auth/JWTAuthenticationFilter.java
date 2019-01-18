@@ -2,7 +2,6 @@ package fr.univ.lorraine.houseSkipper.auth;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.univ.lorraine.houseSkipper.exceptions.UserEmailAlreadyExists;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +21,7 @@ import java.util.Date;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.*;
 
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -63,5 +62,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         currentUser.setToken(token);
         ObjectMapper o = new ObjectMapper();
         o.writeValue(res.getOutputStream(), currentUser);
+    }
+    public static String createTokenByUser(ApplicationUser user){
+        return JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .sign(HMAC512(SECRET.getBytes()));
     }
 }
