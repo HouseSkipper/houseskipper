@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class HouseSkipperApplication {
 
 
+
+
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -23,6 +25,7 @@ public class HouseSkipperApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HouseSkipperApplication.class, args);
+
 	}
 
 

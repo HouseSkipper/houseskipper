@@ -16,7 +16,6 @@ import java.util.List;
 @Data
 public class Task {
     @Id @GeneratedValue
-    @Column(name = "task_id")
     private Long id;
 
     private @NonNull String room;

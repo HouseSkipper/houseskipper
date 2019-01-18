@@ -25,7 +25,8 @@ public class ApplicationUser {
     private @NonNull String password;
     private @NonNull String telephone;
     private @NonNull String role;
-    private String token;
+    private @NonNull String emailToken;
+    private String Token;
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

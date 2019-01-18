@@ -2,7 +2,6 @@ package fr.univ.lorraine.houseSkipper.auth;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.univ.lorraine.houseSkipper.exceptions.UserEmailAlreadyExists;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,7 +59,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         ApplicationUser currentUser = new ApplicationUser();
         currentUser.setUsername(((User) auth.getPrincipal()).getUsername());
-        currentUser.setToken(token);
         ObjectMapper o = new ObjectMapper();
         o.writeValue(res.getOutputStream(), currentUser);
     }
