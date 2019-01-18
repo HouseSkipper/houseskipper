@@ -2,6 +2,7 @@ package fr.univ.lorraine.houseSkipper.controller;
 
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Task;
+import fr.univ.lorraine.houseSkipper.model.UploadFileResponse;
 import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -24,17 +25,27 @@ public class TaskController {
         this.authenticatedUserService = authenticatedUserService;
     }
 
-    @GetMapping("/tasks")
+    @GetMapping("tasks")
     public List<Task> tasksList(){
+        for (Task t:authenticatedUserService.getAuthenticatedUser().getTasks()
+             ) {
+            for (UploadFileResponse f:t.getFiles()
+                 ) {
+                System.out.println("============" + f.getFileName());
+            }
+
+        }
         return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
 
-    @PostMapping("/tasks")
+    @PostMapping("tasks")
     public Task createTask(@Valid @RequestBody Task task) {
         ApplicationUser user = authenticatedUserService.getAuthenticatedUser();
         task.setUser(user);
         System.out.println(user.getFirstname()+"-------------------------------"+task.getBudget());
-        //task.setFiles(new ArrayList<UploadFileResponse>());
+        List<Task> tsks = this.repository.findAll();
+        if(tsks.size() == 0)
+            task.setId(new Long(1));
         return repository.save(task);
 
     }

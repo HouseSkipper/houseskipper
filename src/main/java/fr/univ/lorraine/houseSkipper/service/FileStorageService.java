@@ -10,10 +10,16 @@ import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,7 +34,7 @@ import java.util.Optional;
 @Service
 public class FileStorageService {
 
-    private final Path fileStorageLocation;
+    public final Path fileStorageLocation;
     private FileRepository fileRepository;
     private TaskRepository repository;
 
@@ -48,7 +54,8 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file, Long taskId) {
         // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileN = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = fileN.replace(" ", "");
 
         try {
             // Check if the file's name contains invalid characters
@@ -60,20 +67,18 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             /*------------------------*/
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
 
-            UploadFileResponse fileResponse = new UploadFileResponse(fileName, targetLocation.toString(), "pdf/image", file.getSize());
+            UploadFileResponse fileResponse = new UploadFileResponse(fileName, filePath.toUri().toString(), "pdf/image", file.getSize(), file.getBytes());
+            System.out.println("StoreFile : -----------------" + fileResponse.getFileName());
 
-            Optional<Task> taskop = this.repository.findById(taskId);
-            if(taskop.isPresent()){
-                Task task = taskop.get();
-                fileResponse.setTask(task);
+            Optional<Task> task = this.repository.findById(taskId);
+            if(task.isPresent()){
+                Task tsk = task.get();
+                System.out.println("StoreFile : -----------------" + tsk.getBudget());
+                fileResponse.setTask(tsk);
                 fileRepository.save(fileResponse);
             }
-
-
-
-
-
             return fileName;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
@@ -99,10 +104,39 @@ public class FileStorageService {
         File[] listOfFiles = folder.listFiles();
         List<String> names = new ArrayList<>();
         for (File f:
-             listOfFiles) {
+                listOfFiles) {
             names.add(f.getName());
         }
 
         return names;
+    }
+
+    public ResponseEntity<?> downloadFile(String file, HttpServletRequest request){
+        String fileName = file.replace("\\s", "");
+        System.out.println("Request received to download file");
+        System.out.println("File to download :"+fileName);
+        try{
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            byte[] content = null;
+            try {
+                content = FileCopyUtils.copyToByteArray(resource.getInputStream());
+                System.out.println("Converted file to bytes successfully.");
+            } catch (IOException e1) {
+                System.err.println("Error while converting file to bytes.");
+                e1.printStackTrace();
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("text/csv"));
+            System.out.println("Download sample file request completed");
+            return new ResponseEntity<byte[]>(content, headers, HttpStatus.OK);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return null;
     }
 }

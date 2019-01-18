@@ -5,7 +5,6 @@ import fr.univ.lorraine.houseSkipper.model.House;
 import fr.univ.lorraine.houseSkipper.model.Room;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +31,11 @@ public class RoomController {
         List<Room> rooms = new ArrayList<>();
         for (House h: houses
              ) {
-            rooms.addAll(h.getRooms());
+            for (Room r: h.getRooms()
+                 ) {
+                r.setRoomName(r.getRoomName() + " : " + h.getHouseName());
+                rooms.add(r);
+            }
 
         }
         for (Room r: rooms

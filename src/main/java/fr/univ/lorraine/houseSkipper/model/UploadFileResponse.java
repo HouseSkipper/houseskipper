@@ -14,7 +14,6 @@ import javax.persistence.*;
 public class UploadFileResponse {
     @Id
     @GeneratedValue
-    @Column(name = "file_id")
     private Long id;
 
     private @NonNull String fileName;
@@ -22,19 +21,23 @@ public class UploadFileResponse {
     private @NonNull String fileType;
     private @NonNull long size;
 
-@ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     //@JsonIgnoreProperties("houses")
     @JsonBackReference
     private @NonNull Task task;
 
+    @Lob
+    @Column(name = "pic")
+    private byte[] pic;
 
 
-    public UploadFileResponse(String fileName, String fileDownloadUri, String fileType, long size) {
+    public UploadFileResponse(String fileName, String fileDownloadUri, String fileType, long size, byte[] pic) {
         this.fileName = fileName;
         this.fileDownloadUri = fileDownloadUri;
         this.fileType = fileType;
         this.size = size;
+        this.pic = pic;
     }
 
     public String getFileName() {

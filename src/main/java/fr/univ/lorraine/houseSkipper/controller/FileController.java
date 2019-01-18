@@ -1,21 +1,23 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
+import fr.univ.lorraine.houseSkipper.model.Task;
 import fr.univ.lorraine.houseSkipper.model.UploadFileResponse;
+import fr.univ.lorraine.houseSkipper.repositories.FileRepository;
+import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
 import fr.univ.lorraine.houseSkipper.service.FileStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("http://localhost:4200")
@@ -25,47 +27,64 @@ public class FileController {
 
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private TaskRepository repository;
 
-
+    @Autowired
+    private FileRepository fileRepository;
 
     @PostMapping("/uploadFile/{taskId}")
     @CrossOrigin("http://localhost:4200")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long taskId) {
-        String fileName = fileStorageService.storeFile(file, taskId);
+        try{
+            System.out.println("-----------" + taskId);
+            String fileName = fileStorageService.storeFile(file, taskId);
 
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
-                .path(fileName)
-                .toUriString();
-        System.out.println(fileDownloadUri + "---------!!!" + fileName);
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/downloadFile/")
+                    .path(fileName)
+                    .toUriString();
+            System.out.println(fileDownloadUri + "---------!!!" + fileName + "-----------!!");
 
-        return new UploadFileResponse(fileName, fileDownloadUri,
-                file.getContentType(), file.getSize());
+            return new UploadFileResponse(fileName, fileDownloadUri,
+                    file.getContentType(), file.getSize(), file.getBytes());
+        }catch (IOException ex){
+            ex.printStackTrace();
+            return new UploadFileResponse();
+        }
     }
 
     @GetMapping("/downloadFile/{fileName:.+}")
     @CrossOrigin("http://localhost:4200")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        // Load file as Resource
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+    public ResponseEntity<byte[]> getFile(@PathVariable String fileName) {
+        Optional<UploadFileResponse> fileOptional = fileRepository.findByFileName(fileName);
 
-        // Try to determine file's content type
-        String contentType = null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException ex) {
-            logger.info("Could not determine file type.");
+        if(fileOptional.isPresent()) {
+            UploadFileResponse file = fileOptional.get();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                    .body(file.getPic());
         }
 
-        // Fallback to the default content type if type could not be determined
-        if(contentType == null) {
-            contentType = "application/octet-stream";
-        }
+        return ResponseEntity.status(404).body(null);
+    }
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+    @GetMapping("/fileNames/{taskId}")
+    public List<String> fileNames(@PathVariable Long taskId) {
+        System.out.println("StoreFile : -----------------" + taskId);
+        Optional<Task> task = this.repository.findById(taskId);
+        List<String> fileName = new ArrayList<>();
+        if(task.isPresent()){
+            Task tsk = task.get();
+            System.out.println("StoreFile : -----------------" + tsk.getBudget());
+            for (UploadFileResponse f: tsk.getFiles()
+            ) {
+                System.out.println("StoreFile : -----------------" + f.getFileName());
+                fileName.add(f.getFileName());
+            }
+        }
+        return fileName;
+
     }
 
     @GetMapping("/downloadFilenames")
@@ -75,7 +94,7 @@ public class FileController {
         StringBuffer sb = new StringBuffer();
 
         for (String s:
-             resource) {
+                resource) {
             sb.append("; filename=\"" + s + "\"");
         }
         System.out.println(sb.toString());
