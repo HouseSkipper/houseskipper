@@ -33,25 +33,45 @@ public class FileController {
     @Autowired
     private FileRepository fileRepository;
 
-    @PostMapping("/uploadFile/{taskId}")
+    @PostMapping("/uploadFile/{Id}/{path}")
     @CrossOrigin("http://localhost:4200")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long taskId) {
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String Id, @PathVariable int path) {
         try{
-            System.out.println("-----------" + taskId);
-            String fileName = fileStorageService.storeFile(file, taskId);
+            String fileName = "";
+            String fileDownloadUri= "";
+;            switch(path){
+                case 1:
+                    System.out.println("-----------" + Id);
+                     fileName = fileStorageService.storeFile(file, Id);
 
-            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/downloadFile/")
-                    .path(fileName)
-                    .toUriString();
-            System.out.println(fileDownloadUri + "---------!!!" + fileName + "-----------!!");
+                     fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                            .path("/downloadFile/")
+                            .path(fileName)
+                            .toUriString();
+                    System.out.println(fileDownloadUri + "---------!!!" + fileName + "-----------!!");
 
-            return new UploadFileResponse(fileName, fileDownloadUri,
-                    file.getContentType(), file.getSize(), file.getBytes());
+                    return new UploadFileResponse(fileName, fileDownloadUri,
+                            file.getContentType(), file.getSize(), file.getBytes());
+                case 2:
+                    System.out.println("-----------" + Id);
+                     fileName = fileStorageService.storeFile(file, Id);
+
+                     fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                            .path("/downloadFile/")
+                            .path(fileName)
+                            .toUriString();
+                    System.out.println(fileDownloadUri + "---------!!!" + fileName + "-----------!!");
+
+                    return new UploadFileResponse(fileName, fileDownloadUri,
+                            file.getContentType(), file.getSize(), file.getBytes());
+            }
+
+
         }catch (IOException ex){
-            ex.printStackTrace();
-            return new UploadFileResponse();
-        }
+                ex.printStackTrace();
+                return new UploadFileResponse();
+            }
+        return new UploadFileResponse();
     }
 
     @GetMapping("/downloadFile/{fileName:.+}")
@@ -82,9 +102,10 @@ public class FileController {
                 System.out.println("StoreFile : -----------------" + f.getFileName());
                 fileName.add(f.getFileName());
             }
+            return fileName;
         }
-        return fileName;
 
+        return new ArrayList<>();
     }
 
     @GetMapping("/downloadFilenames")

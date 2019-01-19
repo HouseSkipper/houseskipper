@@ -6,7 +6,6 @@ import lombok.NonNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.List;
 public class ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long id;
     private @NonNull String firstname;
     private @NonNull String lastname;
