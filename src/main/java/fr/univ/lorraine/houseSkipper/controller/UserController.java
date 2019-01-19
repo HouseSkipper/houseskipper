@@ -46,11 +46,6 @@ public class UserController {
             applicationUser.setEmailToken(RandomStringUtils.randomAlphanumeric(32));
             applicationUser.setIsValid(false);
             UserRepository.save(applicationUser);
-            skillRepository.save(new Skill("Gros Oeuvres", 0, applicationUser));
-            skillRepository.save(new Skill("Seconds Oeuvres", 0, applicationUser));
-            skillRepository.save(new Skill("Petits travaux de bricolage", 0, applicationUser));
-            skillRepository.save(new Skill("Petits travaux de jardinage", 0, applicationUser));
-            skillRepository.save(new Skill("Aménagement paysager", 0, applicationUser));
             try {
                 notificationService.sendConfirmationEmail(applicationUser);
             } catch (MessagingException e) {
@@ -70,6 +65,11 @@ public class UserController {
                 user.setIsValid(true);
                 UserRepository.save(user);
                 user.setToken(JWTAuthenticationFilter.createTokenByUser(user));
+                skillRepository.save(new Skill("Gros Oeuvres", 0, user));
+                skillRepository.save(new Skill("Seconds Oeuvres", 0, user));
+                skillRepository.save(new Skill("Petits travaux de bricolage", 0, user));
+                skillRepository.save(new Skill("Petits travaux de jardinage", 0, user));
+                skillRepository.save(new Skill("Aménagement paysager", 0, user));
                 return user;
             }
         }else{
