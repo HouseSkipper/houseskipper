@@ -52,7 +52,7 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file, Long taskId) {
+    public String storeFile(MultipartFile file, String Id) {
         // Normalize file name
         String fileN = StringUtils.cleanPath(file.getOriginalFilename());
         String fileName = fileN.replace(" ", "");
@@ -72,7 +72,7 @@ public class FileStorageService {
             UploadFileResponse fileResponse = new UploadFileResponse(fileName, filePath.toUri().toString(), "pdf/image", file.getSize(), file.getBytes());
             System.out.println("StoreFile : -----------------" + fileResponse.getFileName());
 
-            Optional<Task> task = this.repository.findById(taskId);
+            Optional<Task> task = this.repository.findByName(Id);
             if(task.isPresent()){
                 Task tsk = task.get();
                 System.out.println("StoreFile : -----------------" + tsk.getBudget());
