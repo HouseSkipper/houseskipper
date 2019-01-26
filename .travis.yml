@@ -11,8 +11,7 @@ before_deploy:
   - eval "$(ssh-agent -s)"
   - chmod 600 /tmp/deploy_rsa
   - ssh-add /tmp/deploy_rsa
-script:
--  sudo chmod -R 777 db_houseskipper
+install:
 - "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
@@ -23,4 +22,5 @@ deploy:
   on:
     branch: master
 after_deploy:
+  - ssh root@92.222.9.74 'chmod 777 /deploy/houseskipper-back/script.sh'
   - ssh root@92.222.9.74 '/deploy/houseskipper-back/script.sh'
