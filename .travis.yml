@@ -16,7 +16,7 @@ before_deploy:
 - ssh-add ./deploy_key
 install:
 - docker-compose up -d
-- chmod -R 777 ./db_houseskipper
+- sudo chmod -R 777 db_houseskipper
 - "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
