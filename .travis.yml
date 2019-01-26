@@ -7,11 +7,11 @@ branches:
   only:
   - master
 before_deploy:
-- openssl aes-256-cbc -K $encrypted_be5939367166_key -iv $encrypted_be5939367166_iv -in deploy_key.enc -out ./tmp/deploy_key -d
+- openssl aes-256-cbc -K $encrypted_be5939367166_key -iv $encrypted_be5939367166_iv -in deploy_key.enc -out ./deploy_key -d
 - eval "$(ssh-agent -s)"
-- chmod 600 /tmp/deploy_key
-- ssh-add /tmp/deploy_key
-- ssh -i ./tmp/deploy_key root@92.222.9.74 pwd
+- chmod 600 ./deploy_key
+- ssh-add ./deploy_key
+- ssh -i ./deploy_key root@92.222.9.74 pwd
 install:
 - "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 notifications:
