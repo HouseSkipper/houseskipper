@@ -23,7 +23,7 @@ notifications:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/ root@92.222.9.74:/deploy/houseskipper-back
+  script: rsync -r --delete-after --quiet --exclude 'db_houseskipper' $TRAVIS_BUILD_DIR/ root@92.222.9.74:/deploy/houseskipper-back
   on:
     branch: master
 after_deploy:
