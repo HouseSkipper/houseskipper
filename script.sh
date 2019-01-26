@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd /deploy/houseskipper-back
+fkill :56723
 docker-compose down
 docker-compose up -d
 sudo chmod -R 777 db_houseskipper
