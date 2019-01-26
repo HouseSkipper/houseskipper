@@ -1,6 +1,8 @@
 language: java
 jdk: oraclejdk8
 sudo: required
+addons:
+  ssh_known_hosts: 92.222.9.74
 services:
 - docker
 branches:
@@ -12,7 +14,6 @@ before_deploy:
 - chmod 600 ./deploy_key
 - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ./deploy_key
-- ssh -i ./deploy_key root@92.222.9.74 pwd
 install:
 - "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 notifications:
