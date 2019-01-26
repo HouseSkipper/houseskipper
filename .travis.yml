@@ -15,8 +15,8 @@ before_deploy:
 - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ./deploy_key
 install:
-- chmod -R 777 ./db_houseskipper
 - docker-compose up -d
+- chmod -R 777 ./db_houseskipper
 - "./mvnw clean install -DskipTests -B -Dspring.profiles.active=prod"
 notifications:
   slack: houseskipper:smfTiIqJXd6xCpCqeMBCqXeY
