@@ -3,6 +3,8 @@ package fr.univ.lorraine.houseSkipper.auth;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
+import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,8 +26,11 @@ import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.*;
 public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    private UserRepository userRepo;
+
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepos) {
         this.authenticationManager = authenticationManager;
+        this.userRepo = userRepos;
     }
 
     @Override
@@ -57,8 +62,8 @@ public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
-        ApplicationUser currentUser = new ApplicationUser();
-        currentUser.setUsername(((User) auth.getPrincipal()).getUsername());
+        ApplicationUser currentUser = userRepo.findByUsername(((User) auth.getPrincipal()).getUsername());
+        System.out.println("user ====== : " + currentUser);
         currentUser.setToken(token);
         ObjectMapper o = new ObjectMapper();
         o.writeValue(res.getOutputStream(), currentUser);
