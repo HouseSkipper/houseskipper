@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
 public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
@@ -34,7 +33,6 @@ public class FileController {
     private FileRepository fileRepository;
 
     @PostMapping("/uploadFile/{Id}/{path}")
-    @CrossOrigin("http://localhost:4200")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String Id, @PathVariable int path) {
         try{
             String fileName = "";
@@ -75,7 +73,6 @@ public class FileController {
     }
 
     @GetMapping("/downloadFile/{fileName:.+}")
-    @CrossOrigin("http://localhost:4200")
     public ResponseEntity<byte[]> getFile(@PathVariable String fileName) {
         Optional<UploadFileResponse> fileOptional = fileRepository.findByFileName(fileName);
 
