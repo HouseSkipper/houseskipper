@@ -63,10 +63,15 @@ public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .sign(HMAC512(SECRET.getBytes()));
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         ApplicationUser currentUser = userRepo.findByUsername(((User) auth.getPrincipal()).getUsername());
-        System.out.println("user ====== : " + currentUser.getUsername());
-        currentUser.setToken(token);
-        ObjectMapper o = new ObjectMapper();
-        o.writeValue(res.getOutputStream(), currentUser);
+        if(currentUser.getIsValid()){
+            System.out.println("user ====== : " + currentUser.getUsername());
+            currentUser.setToken(token);
+            ObjectMapper o = new ObjectMapper();
+            o.writeValue(res.getOutputStream(), currentUser);
+        }else{
+            new RestAuthenticationEntryPoint().erreur(req,res,null,"Vous devez valider votre adresse mail");
+        }
+
     }
     public static String createTokenByUser(ApplicationUser user){
         return JWT.create()
