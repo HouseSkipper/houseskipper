@@ -63,9 +63,6 @@ public class UserController {
         System.out.println("============== "+emailToken);
         ApplicationUser user = UserRepository.findByEmailToken(emailToken);
         if(user != null){
-            if(user.getIsValid()){
-                throw new InvalidValidationTokenException();
-            }else{
                 user.getUserAgents().add(request.getHeader("User-Agent"));
                 System.out.println(request.getHeader("User-Agent"));
                 user.setIsValid(true);
@@ -77,7 +74,6 @@ public class UserController {
                 skillRepository.save(new Skill("Petits travaux de jardinage", 0, user));
                 skillRepository.save(new Skill("Aménagement paysager", 0, user));
                 return user;
-            }
         }else{
             throw new InvalidValidationTokenException();
         }

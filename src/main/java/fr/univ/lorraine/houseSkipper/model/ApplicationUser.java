@@ -29,9 +29,6 @@ public class ApplicationUser {
     private @NonNull Boolean isValid;
     private String Token;
 
-    @ElementCollection
-    private List<String> userAgents = new ArrayList<>();
-
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     //@JsonIgnoreProperties("user")
     @JsonManagedReference
@@ -48,6 +45,9 @@ public class ApplicationUser {
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
+
+    @ElementCollection
+    private List<String> userAgents = new ArrayList<>();
 
     public ApplicationUser(){
 

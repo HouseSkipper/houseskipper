@@ -1,6 +1,7 @@
 package fr.univ.lorraine.houseSkipper.auth;
 
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import fr.univ.lorraine.houseSkipper.service.EmailServiceImpl;
 import fr.univ.lorraine.houseSkipper.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,14 +30,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private UserDetailsServiceImpl userDetailsService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private EmailServiceImpl emailService;
 
     @Value("${client.url}")
     private String clientUrl;
 
 
-    public WebSecurity(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public WebSecurity(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, EmailServiceImpl email) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailService = email;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), userRepository))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), userRepository,emailService))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

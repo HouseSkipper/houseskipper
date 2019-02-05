@@ -47,8 +47,13 @@ public class EmailServiceImpl{
     */
 
     public void sendConfirmationEmail(ApplicationUser user) throws MessagingException {
-        String url = env.getProperty("client.url")+"/#/validateAccount/";
-        String html = "<html>Bonjour "+user.getFirstname()+"\n"+"Confirmez-votre inscription en entrant le code suivant : <strong>" + user.getEmailToken() +"</strong></html>";
+        String html = "<html>Bonjour "+user.getFirstname()+"\n"+", confirmez-votre inscription en entrant le code suivant : <strong>" + user.getEmailToken() +"</strong></html>";
+
+        sendHtmlEmail("Bienvenue sur Houseskipper", html, user.getUsername());
+    }
+
+    public void sendCheckUser(ApplicationUser user) throws MessagingException {
+        String html = "<html>Bonjour "+user.getFirstname()+"\n"+", confirmer-votre nouveau navigateur en entrant le code suivant : <strong>" + user.getEmailToken() +"</strong></html>";
 
         sendHtmlEmail("Bienvenue sur Houseskipper", html, user.getUsername());
     }
