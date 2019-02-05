@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/users")
@@ -28,6 +29,8 @@ public class UserController {
     private SkillRepository skillRepository;
     @Autowired
     private EmailServiceImpl notificationService;
+    @Autowired
+    private HttpServletRequest request;
 
     public UserController(UserRepository UserRepository, SkillRepository skillRepository,
                           BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -44,7 +47,7 @@ public class UserController {
         }else {
             applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
             System.out.println(applicationUser.toString());
-            applicationUser.setEmailToken(RandomStringUtils.randomAlphanumeric(32));
+            applicationUser.setEmailToken(RandomStringUtils.randomAlphanumeric(8));
             applicationUser.setIsValid(false);
             UserRepository.save(applicationUser);
             try {
@@ -63,6 +66,8 @@ public class UserController {
             if(user.getIsValid()){
                 throw new InvalidValidationTokenException();
             }else{
+                user.getUserAgents().add(request.getHeader("User-Agent"));
+                System.out.println(request.getHeader("User-Agent"));
                 user.setIsValid(true);
                 UserRepository.save(user);
                 user.setToken(JWTAuthenticationFilter.createTokenByUser(user));

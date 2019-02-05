@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,7 +22,7 @@ import java.util.Date;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.*;
 
-public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
     private UserRepository userRepo;
@@ -63,17 +62,18 @@ public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .sign(HMAC512(SECRET.getBytes()));
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         ApplicationUser currentUser = userRepo.findByUsername(((User) auth.getPrincipal()).getUsername());
-        if(currentUser.getIsValid()){
+        if (currentUser.getIsValid()) {
             System.out.println("user ====== : " + currentUser.getUsername());
             currentUser.setToken(token);
             ObjectMapper o = new ObjectMapper();
             o.writeValue(res.getOutputStream(), currentUser);
-        }else{
-            new RestAuthenticationEntryPoint().erreur(req,res,null,"Vous devez valider votre adresse mail");
+        } else {
+            new RestAuthenticationEntryPoint().erreur(req, res, null, "Vous devez valider votre adresse mail");
         }
 
     }
-    public static String createTokenByUser(ApplicationUser user){
+
+    public static String createTokenByUser(ApplicationUser user) {
         return JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

@@ -29,6 +29,9 @@ public class ApplicationUser {
     private @NonNull Boolean isValid;
     private String Token;
 
+    @ElementCollection
+    private List<String> userAgents = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     //@JsonIgnoreProperties("user")
     @JsonManagedReference

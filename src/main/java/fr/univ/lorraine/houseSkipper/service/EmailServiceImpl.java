@@ -37,9 +37,18 @@ public class EmailServiceImpl{
         javaMailSender.send(message);
     }
 
+    /*
     public void sendConfirmationEmail(ApplicationUser user) throws MessagingException {
         String url = env.getProperty("client.url")+"/#/validateAccount/";
         String html = "<html>Bonjour "+user.getFirstname()+"\n"+"Confirmez-votre inscription en cliquant sur le lien suivant : <a href='"+url+user.getEmailToken()+"'>Ici</a></html>";
+
+        sendHtmlEmail("Bienvenue sur Houseskipper", html, user.getUsername());
+    }
+    */
+
+    public void sendConfirmationEmail(ApplicationUser user) throws MessagingException {
+        String url = env.getProperty("client.url")+"/#/validateAccount/";
+        String html = "<html>Bonjour "+user.getFirstname()+"\n"+"Confirmez-votre inscription en entrant le code suivant : <strong>" + user.getEmailToken() +"</strong></html>";
 
         sendHtmlEmail("Bienvenue sur Houseskipper", html, user.getUsername());
     }
