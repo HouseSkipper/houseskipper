@@ -22,6 +22,7 @@ import javax.mail.MessagingException;
 @RequestMapping("/users")
 public class UserController {
 
+    //User
     private UserRepository UserRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private SkillRepository skillRepository;

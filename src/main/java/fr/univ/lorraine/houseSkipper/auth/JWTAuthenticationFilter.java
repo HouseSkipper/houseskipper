@@ -63,7 +63,7 @@ public class    JWTAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .sign(HMAC512(SECRET.getBytes()));
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         ApplicationUser currentUser = userRepo.findByUsername(((User) auth.getPrincipal()).getUsername());
-        System.out.println("user ====== : " + currentUser);
+        System.out.println("user ====== : " + currentUser.getUsername());
         currentUser.setToken(token);
         ObjectMapper o = new ObjectMapper();
         o.writeValue(res.getOutputStream(), currentUser);
