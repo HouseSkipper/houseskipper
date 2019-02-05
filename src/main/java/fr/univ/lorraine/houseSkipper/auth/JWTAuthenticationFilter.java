@@ -75,7 +75,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             ObjectMapper o = new ObjectMapper();
             o.writeValue(res.getOutputStream(), currentUser);
         } else if(!currentUser.getIsValid()){
-            new RestAuthenticationEntryPoint().erreur(req, res, null, "Vous devez valider votre adresse mail");
+            new RestAuthenticationEntryPoint().erreur(req, res, null, "Nouvel endroit");
         } else {
             currentUser.setEmailToken(RandomStringUtils.randomAlphanumeric(8));
             userRepo.save(currentUser);
