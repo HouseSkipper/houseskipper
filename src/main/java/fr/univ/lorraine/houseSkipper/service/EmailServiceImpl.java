@@ -40,28 +40,52 @@ public class EmailServiceImpl{
     /*
     public void sendConfirmationEmail(ApplicationUser user) throws MessagingException {
         String url = env.getProperty("client.url")+"/#/validateAccount/";
-        String html = "<html>Bonjour "+user.getFirstname()+"\n"+"Confirmez-votre inscription en cliquant sur le lien suivant : <a href='"+url+user.getEmailToken()+"'>Ici</a></html>";
+        String html = "<html>Bonjour "+user.getFirstname()+"<br>"+"Confirmez-votre inscription en cliquant sur le lien suivant : <a href='"+url+user.getEmailToken()+"'>Ici</a></html>";
 
         sendHtmlEmail("Bienvenue sur Houseskipper", html, user.getUsername());
     }
     */
 
     public void sendConfirmationEmail(ApplicationUser user) throws MessagingException {
-        String html = "<html>Bonjour "+user.getFirstname()+"\n"+", confirmez-votre inscription en entrant le code suivant : <strong>" + user.getEmailToken() +"</strong></html>";
-
-        sendHtmlEmail("Bienvenue sur Houseskipper", html, user.getUsername());
+        StringBuilder html = new StringBuilder();
+        html.append("<html>");
+        html.append("Bonjour " + user.getFirstname() + " " + user.getLastname() + "<br>");
+        html.append("<br>");
+        html.append("Vous avez demandé la création d'un compte d'accès à la plateforme HouseSkipper." + "<br>");
+        html.append("<br>");
+        html.append("Afin de finaliser votre opération, veuillez utiliser le code de sécurité suivant lorsqu'il vous sera demandé." + "<br>");
+        html.append("Code de sécurité : <strong>" + user.getEmailToken() + "</strong><br>");
+        html.append("<br>");
+        html.append("Si vous n'avez pas effectué cette opération, nous vous invitons à nous faire parvenir un message à contact.donneesprivées@houseskipper.com." + "<br>");
+        html.append("<br><br>");
+        html.append("Cordialement," + "<br>");
+        html.append("<br>");
+        html.append("L'assistance HouseSkipper </html>");
+        sendHtmlEmail("Bienvenue sur Houseskipper", html.toString(), user.getUsername());
     }
 
     public void sendCheckUser(ApplicationUser user) throws MessagingException {
-        String html = "<html>Bonjour "+user.getFirstname()+"\n"+", confirmer-votre nouveau navigateur en entrant le code suivant : <strong>" + user.getEmailToken() +"</strong></html>";
-
-        sendHtmlEmail("Bienvenue sur Houseskipper", html, user.getUsername());
+        StringBuilder html = new StringBuilder();
+        html.append("<html>");
+        html.append("Bonjour " + user.getFirstname() + " " + user.getLastname() + "<br>");
+        html.append("<br>");
+        html.append("Vos identifiants de connexion à HouseSkipper ont été utilisé pour se connecter à la plateforme partir d'un nouvel appareil." + "<br>");
+        html.append("<br>");
+        html.append("Afin de finaliser votre opération, veuillez utiliser le code de sécurité suivant lorsqu'il vous sera demandé." + "<br>");
+        html.append("Code de sécurité : <strong>" + user.getEmailToken() + "</strong><br>");
+        html.append("<br>");
+        html.append("Si vous ne vous êtes pas récemment connecté à la plateforme HouseSkipper à partir d'un nouvel appareil, il serait plus sûr de changer le mot de passe de votre compte." + "<br>");
+        html.append("<br><br>");
+        html.append("Cordialement," + "<br>");
+        html.append("<br>");
+        html.append("L'assistance HouseSkipper </html>");
+        sendHtmlEmail("Connexion Houseskipper", html.toString(), user.getUsername());
     }
 
     // TODO Ne pas oublier de générer un nouveau emailToken et de le repasser à invalid
     public void sendChangeConfirmationEmail(ApplicationUser user) throws MessagingException {
         String url = env.getProperty("client.url")+"/#/validateAccount/";
-        String html = "<html>Bonjour "+user.getFirstname()+"\n"+"Veuillez confirmer votre nouvelle adresse email en cliquant : <a href='"+url+user.getEmailToken()+"'>Ici</a></html>";
+        String html = "<html>Bonjour "+user.getFirstname()+"<br>"+"Veuillez confirmer votre nouvelle adresse email en cliquant : <a href='"+url+user.getEmailToken()+"'>Ici</a></html>";
 
         sendHtmlEmail("Changement d'adresse email", html, user.getUsername());
     }
