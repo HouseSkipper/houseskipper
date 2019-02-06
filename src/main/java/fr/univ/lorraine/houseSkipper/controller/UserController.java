@@ -68,11 +68,13 @@ public class UserController {
                 user.setIsValid(true);
                 UserRepository.save(user);
                 user.setToken(JWTAuthenticationFilter.createTokenByUser(user));
-                skillRepository.save(new Skill("Gros Oeuvres", 0, user));
-                skillRepository.save(new Skill("Seconds Oeuvres", 0, user));
-                skillRepository.save(new Skill("Petits travaux de bricolage", 0, user));
-                skillRepository.save(new Skill("Petits travaux de jardinage", 0, user));
-                skillRepository.save(new Skill("Aménagement paysager", 0, user));
+                if(user.getSkills().isEmpty()){
+                    skillRepository.save(new Skill("Gros Oeuvres", 0, user));
+                    skillRepository.save(new Skill("Seconds Oeuvres", 0, user));
+                    skillRepository.save(new Skill("Petits travaux de bricolage", 0, user));
+                    skillRepository.save(new Skill("Petits travaux de jardinage", 0, user));
+                    skillRepository.save(new Skill("Aménagement paysager", 0, user));
+                }
                 return user;
         }else{
             throw new InvalidValidationTokenException();
