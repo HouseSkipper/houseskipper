@@ -69,11 +69,11 @@ public class UserController {
                 UserRepository.save(user);
                 user.setToken(JWTAuthenticationFilter.createTokenByUser(user));
                 if(user.getSkills().isEmpty()){
-                    skillRepository.save(new Skill("Gros Oeuvres", 0, user));
-                    skillRepository.save(new Skill("Seconds Oeuvres", 0, user));
-                    skillRepository.save(new Skill("Petits travaux de bricolage", 0, user));
-                    skillRepository.save(new Skill("Petits travaux de jardinage", 0, user));
-                    skillRepository.save(new Skill("Aménagement paysager", 0, user));
+                    skillRepository.save(new Skill("Gros Oeuvres", 1, user));
+                    skillRepository.save(new Skill("Seconds Oeuvres", 1, user));
+                    skillRepository.save(new Skill("Petits travaux de bricolage", 1, user));
+                    skillRepository.save(new Skill("Petits travaux de jardinage", 1, user));
+                    skillRepository.save(new Skill("Aménagement paysager", 1, user));
                 }
                 return user;
         }else{
