@@ -70,12 +70,12 @@ public class FileStorageService {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
 
             UploadFileResponse fileResponse = new UploadFileResponse(fileName, filePath.toUri().toString(), "pdf/image", file.getSize(), file.getBytes());
-            System.out.println("StoreFile : -----------------" + fileResponse.getFileName());
+            System.out.println("FileResponse : -----------------" + fileResponse.getFileName());
 
             Optional<Task> task = this.repository.findByName(Id);
             if(task.isPresent()){
                 Task tsk = task.get();
-                System.out.println("StoreFile : -----------------" + tsk.getBudget());
+                System.out.println("tskBudget : !!!!-----------------" + tsk.getBudget());
                 fileResponse.setTask(tsk);
                 fileRepository.save(fileResponse);
             }

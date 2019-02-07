@@ -32,17 +32,13 @@ public class FileController {
     @Autowired
     private FileRepository fileRepository;
 
-    @PostMapping("/uploadFile/{Id}/{path}")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String Id, @PathVariable int path) {
+    @PostMapping("/uploadFile/{Id}")
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String Id) {
         try{
-            String fileName = "";
-            String fileDownloadUri= "";
-;            switch(path){
-                case 1:
                     System.out.println("-----------" + Id);
-                     fileName = fileStorageService.storeFile(file, Id);
+                    String fileName = fileStorageService.storeFile(file, Id);
 
-                     fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                             .path("/downloadFile/")
                             .path(fileName)
                             .toUriString();
@@ -50,38 +46,42 @@ public class FileController {
 
                     return new UploadFileResponse(fileName, fileDownloadUri,
                             file.getContentType(), file.getSize(), file.getBytes());
-                case 2:
-                    System.out.println("-----------" + Id);
-                     fileName = fileStorageService.storeFile(file, Id);
-
-                     fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                            .path("/downloadFile/")
-                            .path(fileName)
-                            .toUriString();
-                    System.out.println(fileDownloadUri + "---------!!!" + fileName + "-----------!!");
-
-                    return new UploadFileResponse(fileName, fileDownloadUri,
-                            file.getContentType(), file.getSize(), file.getBytes());
-            }
-
-
         }catch (IOException ex){
                 ex.printStackTrace();
                 return new UploadFileResponse();
             }
-        return new UploadFileResponse();
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String fileName) {
+    @GetMapping("/downloadFile/{fileName:.+}/{Id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String fileName, @PathVariable Long Id) {
+        Optional<Task> task = this.repository.findById(Id);
+        List<UploadFileResponse> fileResponses = new ArrayList<>();
+        if(task.isPresent()){
+            Task tsk = task.get();
+            fileResponses = fileRepository.findAllByTask(tsk);
+        }
+
+        System.out.println(fileResponses.size()+"------------------FilesSize");
+        for (UploadFileResponse file: fileResponses
+             ) {
+            if (file.getFileName().equals(fileName)){
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                        .body(file.getPic());
+            }
+        }
+        /*
         Optional<UploadFileResponse> fileOptional = fileRepository.findByFileName(fileName);
 
         if(fileOptional.isPresent()) {
             UploadFileResponse file = fileOptional.get();
+
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
                     .body(file.getPic());
         }
+         */
+
 
         return ResponseEntity.status(404).body(null);
     }
