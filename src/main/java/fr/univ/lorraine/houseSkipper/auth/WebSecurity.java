@@ -18,8 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.context.annotation.Bean;
 
-import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.SIGN_UP_URL;
-import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.VALID_EMAIL;
+import static fr.univ.lorraine.houseSkipper.auth.SecurityConstants.*;
 
 
 @EnableWebSecurity
@@ -51,6 +50,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, VALID_EMAIL).permitAll()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SIGN_UP_P_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), userRepository,emailService))

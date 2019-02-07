@@ -2,6 +2,7 @@ package fr.univ.lorraine.houseSkipper.service;
 
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 
+import fr.univ.lorraine.houseSkipper.model.Prestataire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -62,6 +63,24 @@ public class EmailServiceImpl{
         html.append("<br>");
         html.append("L'assistance HouseSkipper </html>");
         sendHtmlEmail("Bienvenue sur Houseskipper", html.toString(), user.getUsername());
+    }
+
+    public void sendConfirmationEmail(Prestataire prestataire) throws MessagingException {
+        StringBuilder html = new StringBuilder();
+        html.append("<html>");
+        html.append("Bonjour " + prestataire.getNom()  + "<br>");
+        html.append("<br>");
+        html.append("Vous avez demandé la création d'un compte d'accès à la plateforme HouseSkipper." + "<br>");
+        html.append("<br>");
+        html.append("Afin de vous connectez, veuillez utiliser le code de sécurité suivant." + "<br>");
+        html.append("Code de sécurité : <strong>" + prestataire.getPassword() + "</strong><br>");
+        html.append("<br>");
+        html.append("Si vous n'avez pas effectué cette opération, nous vous invitons à nous faire parvenir un message à contact.donneesprivées@houseskipper.com." + "<br>");
+        html.append("<br><br>");
+        html.append("Cordialement," + "<br>");
+        html.append("<br>");
+        html.append("L'assistance HouseSkipper </html>");
+        sendHtmlEmail("Bienvenue sur Houseskipper", html.toString(), prestataire.getEmail());
     }
 
     public void sendCheckUser(ApplicationUser user) throws MessagingException {
