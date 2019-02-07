@@ -3,7 +3,6 @@ package fr.univ.lorraine.houseSkipper.controller;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Shortcut;
 import fr.univ.lorraine.houseSkipper.repositories.ShortcutRepository;
-import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +15,10 @@ import java.util.Collection;
 public class ShortcutController {
 
     private ShortcutRepository shortcutRepository;
-    private UserRepository userRepository;
     private AuthenticatedUserService authenticatedUserService;
 
-    public ShortcutController(ShortcutRepository repository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService){
+    public ShortcutController(ShortcutRepository repository, AuthenticatedUserService authenticatedUserService){
         this.shortcutRepository = repository;
-        this.userRepository = userRepository;
         this.authenticatedUserService = authenticatedUserService;
     }
 
