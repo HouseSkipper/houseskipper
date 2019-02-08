@@ -18,7 +18,7 @@ public class Shortcut {
 
     private @NonNull
     String name;
-    private @NonNull int favoris;
+    private int favoris;
     private @NonNull String link;
     private  String path_logo;
 
