@@ -22,9 +22,9 @@ public class ShortcutController {
         this.authenticatedUserService = authenticatedUserService;
     }
 
-    @PostMapping("/shortcut")
+    @PostMapping("add/shortcuts")
     public @Valid Shortcut createShortcut(@Valid @RequestBody Shortcut shortcut) {
-
+        System.out.println("adding a shortcut");
         ApplicationUser user =  this.authenticatedUserService.getAuthenticatedUser();
         shortcut.setUser(user);
 
