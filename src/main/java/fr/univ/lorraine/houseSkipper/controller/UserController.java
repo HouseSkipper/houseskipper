@@ -4,6 +4,7 @@ package fr.univ.lorraine.houseSkipper.controller;
 import fr.univ.lorraine.houseSkipper.auth.JWTAuthenticationFilter;
 import fr.univ.lorraine.houseSkipper.exceptions.InvalidValidationTokenException;
 import fr.univ.lorraine.houseSkipper.exceptions.UserEmailAlreadyExists;
+import fr.univ.lorraine.houseSkipper.exceptions.UserNameNotFoundException;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.Skill;
 import fr.univ.lorraine.houseSkipper.repositories.SkillRepository;
@@ -55,6 +56,18 @@ public class UserController {
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @PutMapping("/update")
+    public void update(@RequestBody ApplicationUser applicationUser){
+        ApplicationUser user = UserRepository.findByUsername(applicationUser.getUsername());
+        if(user == null){
+            throw new UserNameNotFoundException();
+        }else {
+            //applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
+            System.out.println(applicationUser.toString());
+            UserRepository.save(applicationUser);
         }
     }
 
