@@ -59,13 +59,13 @@ public class UserController {
         }
     }
 
-    @PutMapping("/")
+    @PutMapping("/update")
     public void update(@RequestBody ApplicationUser applicationUser){
         ApplicationUser user = UserRepository.findByUsername(applicationUser.getUsername());
         if(user == null){
             throw new UserNameNotFoundException();
         }else {
-            applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
+            //applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
             System.out.println(applicationUser.toString());
             UserRepository.save(applicationUser);
         }
