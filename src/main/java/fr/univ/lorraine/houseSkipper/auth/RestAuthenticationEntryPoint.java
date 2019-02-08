@@ -26,9 +26,24 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setCharacterEncoding("UTF-8");
         HashMap<String, Object> map = new HashMap<>();
         map.put("status", "401");
-        map.put("message", "Email or password incorrect");
+        map.put("message", "Email ou mot de passe incorrect");
         response.setStatus(401);
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), map);
+    }
+
+    public void erreur(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final AuthenticationException authException, String message) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("status", "401");
+        map.put("message", message);
+        response.setStatus(401);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getOutputStream(), map);
+
     }
 }
