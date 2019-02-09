@@ -46,6 +46,15 @@ public class ApplicationUser {
     @JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    //@JsonIgnoreProperties("user")
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    private List<Shortcut> shortcuts = new ArrayList<>();
+
+    @ElementCollection
+    private List<String> userAgents = new ArrayList<>();
+
     public ApplicationUser(){
 
     }
