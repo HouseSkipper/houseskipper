@@ -13,7 +13,7 @@ curl -i -H "Content-Type: application/json" -X POST -d '{
 
 
 ## Commandes docker
-# mise en route
+### mise en route
 docker-compose up -d
-# arret
+### arret
 docker-compose down
