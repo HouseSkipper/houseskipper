@@ -12,6 +12,8 @@ curl -i -H "Content-Type: application/json" -X POST -d '{
 }' http://localhost:8080/login
 
 
-## Exemple commande docker
+## Commandes docker
+### mise en route
 docker-compose up -d
+### arret
 docker-compose down
