@@ -88,40 +88,37 @@ public class UserController {
             System.out.println(request.getHeader("User-Agent"));
             user.setIsValid(true);
             UserRepository.save(user);
-
-            House house = new House();
-            house.setUser(user);
-            house.setHouseName("Exemple de maison");
-            house.setStandardType("T1");
-            house.setHouseType("maison");
-            house.setResidence("principale");
-            house.setPays("France");
-            house.setCity("Exemple Ville");
-            house.setPostalCode(99999);
-            house.setAddress("12 rue de l'exemple");
-            house = this.houseRepository.save(house);
-
-            Room r1 = new Room();
-            r1.setHouse(house);
-            r1.setRoomName("Cuisine");
-            r1.setSpace(0);
-            this.roomRepository.save(r1);
-
-            Room r2 = new Room();
-            r2.setHouse(house);
-            r2.setRoomName("Salle de bain");
-            r2.setSpace(0);
-            this.roomRepository.save(r2);
-
-            Room r3 = new Room();
-            r3.setHouse(house);
-            r3.setRoomName("Pièce d'exemple");
-            r3.setSpace(0);
-            this.roomRepository.save(r3);
-
-
             user.setToken(JWTAuthenticationFilter.createTokenByUser(user));
             if (user.getSkills().isEmpty()) {
+                House house = new House();
+                house.setUser(user);
+                house.setHouseName("Exemple de maison");
+                house.setStandardType("T1");
+                house.setHouseType("maison");
+                house.setResidence("principale");
+                house.setPays("France");
+                house.setCity("Exemple Ville");
+                house.setPostalCode(99999);
+                house.setAddress("12 rue de l'exemple");
+                house = this.houseRepository.save(house);
+
+                Room r1 = new Room();
+                r1.setHouse(house);
+                r1.setRoomName("Cuisine");
+                r1.setSpace(0);
+                this.roomRepository.save(r1);
+
+                Room r2 = new Room();
+                r2.setHouse(house);
+                r2.setRoomName("Salle de bain");
+                r2.setSpace(0);
+                this.roomRepository.save(r2);
+
+                Room r3 = new Room();
+                r3.setHouse(house);
+                r3.setRoomName("Pièce d'exemple");
+                r3.setSpace(0);
+                this.roomRepository.save(r3);
                 skillRepository.save(new Skill("Gros Oeuvres", 1, user));
                 skillRepository.save(new Skill("Seconds Oeuvres", 1, user));
                 skillRepository.save(new Skill("Petits travaux de bricolage", 1, user));
