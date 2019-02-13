@@ -12,13 +12,17 @@ import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import fr.univ.lorraine.houseSkipper.service.EmailServiceImpl;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -43,7 +47,7 @@ public class UserController {
     @PostMapping("/sign-up")
     public void signUp(@RequestBody ApplicationUser applicationUser) {
         ApplicationUser user = UserRepository.findByUsername(applicationUser.getUsername());
-        if(user != null){
+        if(user != null) {
             throw new UserEmailAlreadyExists();
         }else {
             applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
@@ -73,7 +77,6 @@ public class UserController {
 
     @GetMapping("validateAccount/{emailToken}")
     public ApplicationUser validateAccount(@PathVariable String emailToken){
-        System.out.println("============== "+emailToken);
         ApplicationUser user = UserRepository.findByEmailToken(emailToken);
         if(user != null){
                 user.getUserAgents().add(request.getHeader("User-Agent"));
@@ -89,9 +92,19 @@ public class UserController {
                     skillRepository.save(new Skill("Aménagement paysager", 1, user));
                 }
                 return user;
-        }else{
+        } else {
             throw new InvalidValidationTokenException();
         }
+    }
 
+    @PostMapping("/exists")
+    @ResponseBody
+    public ResponseEntity<?> getUserExists(@RequestBody ApplicationUser user){
+        ApplicationUser u =  UserRepository.findByUsername(user.getUsername());
+        if(u == null) {
+            return ResponseEntity.ok(false);
+        } else {
+            return ResponseEntity.ok(true);
+        }
     }
 }
