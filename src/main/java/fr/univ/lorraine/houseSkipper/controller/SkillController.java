@@ -1,6 +1,7 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
 import fr.univ.lorraine.houseSkipper.model.Skill;
+import fr.univ.lorraine.houseSkipper.model.SubSkill;
 import fr.univ.lorraine.houseSkipper.repositories.SkillRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class SkillController {
@@ -39,6 +41,11 @@ public class SkillController {
 
             return skillRepository.save(skill);
         }).orElseThrow(() -> new ResourceNotFoundException("skillId " + skillId + " not found"));
+    }
+
+    @GetMapping("skills/{skillId}")
+    public Optional<Skill> getOneSkill(@PathVariable Long skillId){
+        return skillRepository.findById(skillId);
     }
 
     @GetMapping("skills")

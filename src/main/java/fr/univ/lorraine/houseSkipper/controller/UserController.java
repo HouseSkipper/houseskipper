@@ -122,10 +122,9 @@ public class UserController {
                 r3.setRoomName("Pièce d'exemple");
                 r3.setSpace(0);
                 this.roomRepository.save(r3);
-                skillRepository.save(new Skill("Gros Oeuvres", 1, user));
-                skillRepository.save(new Skill("Seconds Oeuvres", 1, user));
-                skillRepository.save(new Skill("Petits travaux de bricolage", 1, user));
-                skillRepository.save(new Skill("Petits travaux de jardinage", 1, user));
+                skillRepository.save(new Skill("Gros œuvre", 1, user));
+                skillRepository.save(new Skill("Second œuvre", 1, user));
+                skillRepository.save(new Skill("Petits travaux", 1, user));
                 skillRepository.save(new Skill("Aménagement paysager", 1, user));
             }
             return user;
