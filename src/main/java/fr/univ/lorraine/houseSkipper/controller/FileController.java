@@ -93,7 +93,7 @@ public class FileController {
         List<String> fileName = new ArrayList<>();
         if(task.isPresent()){
             Task tsk = task.get();
-            System.out.println("StoreFile : -----------------" + tsk.getBudget());
+            System.out.println("StoreFile : -----------------" + tsk.getPartieExacte());
             for (UploadFileResponse f: tsk.getFiles()
             ) {
                 System.out.println("StoreFile : -----------------" + f.getFileName());

@@ -71,9 +71,9 @@ public class FileStorageService {
             UploadFileResponse fileResponse = new UploadFileResponse(fileName, filePath.toUri().toString(), "pdf/image", file.getSize(), file.getBytes());
             System.out.println("FileResponse : -----------------" + fileResponse.getFileName());
 
-            Task task = this.repository.findByName(Id).get(0);
+            Task task = this.repository.findByNom(Id).get(0);
 
-                System.out.println("tskBudget : !!!!-----------------" + task.getBudget());
+                System.out.println("tskBudget : !!!!-----------------" + task.getPartieExacte());
                 fileResponse.setTask(task);
                 fileRepository.save(fileResponse);
 

@@ -12,6 +12,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Override
     Optional<Task> findById(Long aLong);
 
-    List<Task> findByName(String name);
+    List<Task> findByNom(String name);
 
 }
