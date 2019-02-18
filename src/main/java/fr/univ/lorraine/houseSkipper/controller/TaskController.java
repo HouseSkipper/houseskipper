@@ -38,27 +38,39 @@ public class TaskController {
         return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
 
+    @GetMapping("tasks/{taskId}")
+    public Task taskById(@PathVariable Long taskId){
+        if(repository.findById(taskId).isPresent()){
+            return repository.findById(taskId).get();
+        }
+        return new Task();
+    }
+
+
+
     @PostMapping("tasks")
     public Task createTask(@Valid @RequestBody Task task) {
         ApplicationUser user = authenticatedUserService.getAuthenticatedUser();
         task.setUser(user);
-        System.out.println(user.getFirstname()+"-------------------------------"+task.getBudget());
-        List<Task> tsks = this.repository.findAll();
-        if(tsks.size() == 0)
-            task.setId(new Long(1));
+        System.out.println(user.getFirstname()+"-------------------------------"+task.getDescription() + task.getNom() + task.getResultat());
+        //List<Task> tsks = this.repository.findAll();
+        //if(tsks.size() == 0)
+          //  task.setId(new Long(1));
         return repository.save(task);
 
     }
 
     @PutMapping("tasks/{taskId}")
-    public Task updateTask(@PathVariable Long taskId, @Valid @RequestBody Task taskRequest) {
-        return repository.findById(taskId).map(task -> {
+    public Task updateTask(@PathVariable String taskId, @Valid @RequestBody Task taskRequest) {
+        return repository.findById(Long.parseLong(taskId)).map(task -> {
             if (task.getUser().equals(authenticatedUserService.getAuthenticatedUser())) {
-                task.setRoom(taskRequest.getRoom());
+                task.setPartieExacte(taskRequest.getPartieExacte());
                 task.setDescription(taskRequest.getDescription());
-                task.setBudget(taskRequest.getBudget());
-                task.setStart_date(taskRequest.getStart_date());
+                task.setPartie(taskRequest.getPartie());
                 task.setStatus(taskRequest.getStatus());
+                task.setType(taskRequest.getType());
+                task.setConnaissance(taskRequest.getConnaissance());
+                task.setResultat(taskRequest.getResultat());
                 return repository.save(task);
             }return new Task();
 

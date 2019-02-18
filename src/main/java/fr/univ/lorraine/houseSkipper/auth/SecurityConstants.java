@@ -8,4 +8,5 @@ public class SecurityConstants {
     public static final String SIGN_UP_URL = "/users/sign-up";
     public static final String SIGN_UP_P_URL = "/add/prestataire";
     public static final String VALID_EMAIL = "/users/validateAccount/{email_token}";
+    public static final String USER_EXISTS = "/users/exists";
 }

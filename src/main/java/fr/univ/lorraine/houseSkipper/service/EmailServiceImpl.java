@@ -33,8 +33,7 @@ public class EmailServiceImpl{
         MimeMessageHelper helper = new MimeMessageHelper(message, multipart, "utf-8");
         helper.setTo(toEmail);
         helper.setSubject(subject);
-
-        message.setContent(htmlContent, "text/html");
+        helper.setText(htmlContent, true);
         javaMailSender.send(message);
     }
 

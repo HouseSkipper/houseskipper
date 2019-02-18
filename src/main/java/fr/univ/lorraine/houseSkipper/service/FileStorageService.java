@@ -29,7 +29,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FileStorageService {
@@ -72,13 +71,12 @@ public class FileStorageService {
             UploadFileResponse fileResponse = new UploadFileResponse(fileName, filePath.toUri().toString(), "pdf/image", file.getSize(), file.getBytes());
             System.out.println("FileResponse : -----------------" + fileResponse.getFileName());
 
-            Optional<Task> task = this.repository.findByName(Id);
-            if(task.isPresent()){
-                Task tsk = task.get();
-                System.out.println("tskBudget : !!!!-----------------" + tsk.getBudget());
-                fileResponse.setTask(tsk);
+            Task task = this.repository.findByNom(Id).get(0);
+
+                System.out.println("tskBudget : !!!!-----------------" + task.getPartieExacte());
+                fileResponse.setTask(task);
                 fileRepository.save(fileResponse);
-            }
+
             return fileName;
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
