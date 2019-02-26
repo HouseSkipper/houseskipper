@@ -1,14 +1,17 @@
 package fr.univ.lorraine.houseSkipper.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
+@Table(name="subPhase")
 public class SubPhase {
 
     @Id @GeneratedValue
@@ -17,13 +20,13 @@ public class SubPhase {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
-    private Phase phase;
+    private @NonNull Phase phase;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    //@JoinColumn(name = "historic_id", nullable = false)
-    @JsonBackReference
-    private Historic historic;
+    @OneToMany(mappedBy = "subPhase", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Historic> historics = new ArrayList<>();
 
+    public SubPhase(){}
     public SubPhase(Long id, String sPhaseName){
         this.id = id;
         this.sPhaseName = sPhaseName;

@@ -45,9 +45,24 @@ public class RoomController {
         return rooms.stream().collect(Collectors.toList());
     }
 
-    @GetMapping("/{houseName}/rooms")
+    @GetMapping("/rooms/{houseName}")
     public Collection<Room> houseList(@PathVariable String houseName){
-        return repository.findAllByHouse(houseName).stream().collect(Collectors.toList());
+        ApplicationUser user = this.authenticatedUserService.getAuthenticatedUser();
+        List<House> houses = user.getHouses();
+        List<Room> rooms = new ArrayList<>();
+        for (House h: houses
+        ) {
+            System.out.println(houseName+"---------------------------------------"+h.getHouseName());
+            if(houseName.contains(h.getHouseName())){
+                for (Room r: h.getRooms()
+                ) {
+                    r.setRoomName(r.getRoomName());
+                    System.out.println(r.getRoomName()+"---------------------------------------");
+                    rooms.add(r);
+                }
+            }
+        }
+        return rooms.stream().collect(Collectors.toList());
     }
 
 }

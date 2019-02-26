@@ -1,25 +1,27 @@
 package fr.univ.lorraine.houseSkipper.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
 @Entity
-@NoArgsConstructor
+@Data
 public class Historic {
 
     @Id @GeneratedValue
     private Long id;
     private Date date;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    private SubPhase subPhase;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
+    private @NonNull SubPhase subPhase;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL)
-    private Task task;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
+    private @NonNull Task task;
+
+    public Historic(){}
 }

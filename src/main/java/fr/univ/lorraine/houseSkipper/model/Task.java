@@ -14,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "task")
 public class Task {
     @Id @GeneratedValue
     private Long id;
@@ -27,7 +28,6 @@ public class Task {
     private @NonNull String type;
     private @NonNull String connaissance;
     private @NonNull String resultat;
-    private @NonNull String phase;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -35,18 +35,18 @@ public class Task {
     @JsonBackReference
     private @NonNull ApplicationUser user;
 
-@OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<UploadFileResponse> files = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "historic_id", nullable = false)
-    private Historic historic;
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Historic> historics = new ArrayList<>();
 
     public Task() {}
 
-    public Task(String name, String partie, String description, String houseName, String partieExacte, Date start_date, String status, String type, String connaissance, String resultat, String phase) {
+    public Task(String name, String partie, String description, String houseName, String partieExacte, Date start_date, String status, String type, String connaissance, String resultat) {
         this.nom = name;
         this.partie = partie;
         this.description = description;
@@ -57,6 +57,5 @@ public class Task {
         this.connaissance = connaissance;
         this.resultat = resultat;
         this.residence = houseName;
-        this.phase = phase;
     }
 }

@@ -1,5 +1,6 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
+
 import fr.univ.lorraine.houseSkipper.model.Historic;
 import fr.univ.lorraine.houseSkipper.model.Task;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
@@ -24,7 +25,10 @@ public class HistoricController {
         List<Historic> historics = new ArrayList<>();
         for (Task t:
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
-            historics.add(t.getHistoric());
+            for (Historic h:
+                 t.getHistorics()) {
+                historics.add(h);
+            }
         }
         return historics;
     }
@@ -36,9 +40,13 @@ public class HistoricController {
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            if(t.getHistoric().getDate().getMonth() == now.getMonth().getValue()){
-                historics.add(t.getHistoric());
+            for (Historic h:
+                    t.getHistorics()) {
+                if(h.getDate().getMonth() == now.getMonth().getValue()){
+                    historics.add(h);
+                }
             }
+
         }
         return historics;
     }
@@ -50,8 +58,12 @@ public class HistoricController {
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            if(t.getHistoric().getDate().getYear() == now.getYear()){
-                historics.add(t.getHistoric());
+
+            for (Historic h:
+                    t.getHistorics()) {
+                if(h.getDate().getYear() == now.getYear()){
+                    historics.add(h);
+                }
             }
         }
         return historics;

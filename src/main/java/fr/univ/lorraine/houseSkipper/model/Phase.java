@@ -2,15 +2,14 @@ package fr.univ.lorraine.houseSkipper.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
-@NoArgsConstructor
+@Data
+@Table(name="phase")
 public class Phase {
 
     @Id @GeneratedValue
@@ -21,8 +20,10 @@ public class Phase {
     @JsonManagedReference
     private List<SubPhase> subPhase = new ArrayList<>();
 
-    public Phase(int id, String phaseName){
-        this.id = Long.parseLong(""+id);
+    public Phase(){}
+
+    public Phase(Long id, String phaseName){
+        this.id = id;
         this.phaseName = phaseName;
 
     }
