@@ -1,6 +1,7 @@
 package fr.univ.lorraine.houseSkipper.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NonNull;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"files", "historics"})
 @Table(name = "task")
 public class Task {
     @Id @GeneratedValue
