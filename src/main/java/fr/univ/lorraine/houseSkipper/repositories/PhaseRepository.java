@@ -6,4 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface PhaseRepository extends JpaRepository<Phase, Long> {
+    Phase findByPhaseName(String name);
 }
