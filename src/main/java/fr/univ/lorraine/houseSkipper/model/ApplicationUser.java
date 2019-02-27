@@ -1,5 +1,6 @@
 package fr.univ.lorraine.houseSkipper.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NonNull;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"houses", "skills", "tasks", "shortcuts"})
 public class ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

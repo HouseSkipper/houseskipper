@@ -2,14 +2,12 @@ package fr.univ.lorraine.houseSkipper.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class SubSkill {
 
     @Id
@@ -22,6 +20,8 @@ public class SubSkill {
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
     private @NonNull Skill skill;
+
+    public SubSkill(){}
 
     public SubSkill(String name, Skill skill){
         this.type = name;

@@ -1,6 +1,7 @@
 package fr.univ.lorraine.houseSkipper.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NonNull;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"files", "historics"})
+@Table(name = "task")
 public class Task {
     @Id @GeneratedValue
     private Long id;
@@ -34,12 +37,14 @@ public class Task {
     @JsonBackReference
     private @NonNull ApplicationUser user;
 
-@OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<UploadFileResponse> files = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Historic> historics = new ArrayList<>();
 
     public Task() {}
 
