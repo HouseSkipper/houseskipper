@@ -20,8 +20,8 @@ public class HistoricController {
     @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
-    @GetMapping("historic/{userId}")
-    public List<Historic> userHistorics(@PathVariable String userId){
+    @GetMapping("historic")
+    public List<Historic> userHistorics(){
         List<Historic> historics = new ArrayList<>();
         for (Task t:
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
