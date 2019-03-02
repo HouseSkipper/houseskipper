@@ -87,7 +87,8 @@ public class TaskController {
     public Task updateTask(@PathVariable String taskId, @Valid @RequestBody Task taskRequest) {
         return repository.findById(Long.parseLong(taskId)).map(task -> {
             List<PartieExacte> partieExactes = taskRequest.getPartiesExacte();
-            List<TypeSecondaire> typeSecondaires = task.getTypeSecondaires();
+            List<TypeSecondaire> typeSecondaires = taskRequest.getTypeSecondaires();
+
             taskRequest.setPartiesExacte(null);
             task.setTypeSecondaires(null);
             taskRequest.setTypeSecondaires(null);
@@ -111,7 +112,7 @@ public class TaskController {
                     p.setTask(task);
                     partieExacteRepository.save(p);
                 }
-                if(!typeSecondaires.isEmpty()){
+                if(task.getType().equals("")){
                     for (TypeSecondaire ts:
                             typeSecondaireRepository.findAllByTask(task)) {
                         typeSecondaireRepository.delete(ts);
@@ -121,8 +122,12 @@ public class TaskController {
                         tss.setTask(task);
                         typeSecondaireRepository.save(tss);
                     }
+                } else {
+                    for (TypeSecondaire ts:
+                            typeSecondaireRepository.findAllByTask(task)) {
+                        typeSecondaireRepository.delete(ts);
+                    }
                 }
-
                 return task;
             }return new Task();
 
