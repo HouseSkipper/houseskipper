@@ -73,7 +73,7 @@ public class FileStorageService {
 
             Task task = this.repository.findByNom(Id).get(0);
 
-                System.out.println("tskBudget : !!!!-----------------" + task.getPartieExacte());
+                System.out.println("tskBudget : !!!!-----------------" + task.getPartiesExacte().size());
                 fileResponse.setTask(task);
                 fileRepository.save(fileResponse);
 
