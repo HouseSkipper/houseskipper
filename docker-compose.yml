@@ -21,7 +21,7 @@ services:
             MYSQL_PASSWORD: houseskipper
             MYSQL_ROOT_PASSWORD: houseskipper
      ports:
-            - "8000:80"
+            - "80:80"
      links:
             # for mysql container
             - "db:db"
