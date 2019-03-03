@@ -45,8 +45,8 @@ public class HouseSkipperApplication {
 	}
 
 	public void createDB(){
-		String[] phases = {"Rédaction", "Validation", "Soumission", "Evaluation",
-				"Décision", "Finalisation", "Exploitation"};
+		String[] phases = {"Redaction", "Validation", "Soumission", "Evaluation",
+				"Decision", "Finalisation", "Exploitation"};
 		for (int i = 0; i < phases.length; i++){
 			System.out.println(phaseRepository.findAll().size() + "----------" + subPhaseRepository.findAll().size() + "----------" );
 			phaseRepository.save(new Phase(new Long(i), phases[i]));
@@ -55,7 +55,7 @@ public class HouseSkipperApplication {
 		for (Phase p:
 				phaseRepository.findAll()) {
 			switch (p.getPhaseName()){
-				case "Rédaction":
+				case "Redaction":
 					SubPhase s1 = new SubPhase(new Long(1),"Description en cours");
 					SubPhase s2 = new SubPhase(new Long(2),"Description finalisée");
 					List<SubPhase> sub = new ArrayList<>();
@@ -63,6 +63,10 @@ public class HouseSkipperApplication {
 					sub.add(s2);
 					Phase ph = phaseRepository.findByPhaseName(p.getPhaseName());
 					ph.setSubPhase(sub);
+					s1.setPhase(ph);
+					s2.setPhase(ph);
+					subPhaseRepository.save(s1);
+					subPhaseRepository.save(s2);
 					phaseRepository.save(ph);
 					break;
 				case "Validation":
@@ -75,6 +79,12 @@ public class HouseSkipperApplication {
 					sub1.add(s5);
 					Phase ph1 = phaseRepository.findByPhaseName(p.getPhaseName());
 					ph1.setSubPhase(sub1);
+					s3.setPhase(ph1);
+					s4.setPhase(ph1);
+					s5.setPhase(ph1);
+					subPhaseRepository.save(s3);
+					subPhaseRepository.save(s4);
+					subPhaseRepository.save(s5);
 					phaseRepository.save(ph1);
 					break;
 				case "Soumission":
@@ -87,6 +97,12 @@ public class HouseSkipperApplication {
 					sub2.add(s8);
 					Phase ph2 = phaseRepository.findByPhaseName(p.getPhaseName());
 					ph2.setSubPhase(sub2);
+					s6.setPhase(ph2);
+					s7.setPhase(ph2);
+					s8.setPhase(ph2);
+					subPhaseRepository.save(s6);
+					subPhaseRepository.save(s7);
+					subPhaseRepository.save(s8);
 					phaseRepository.save(ph2);
 					break;
 				case "Evaluation":
@@ -97,9 +113,13 @@ public class HouseSkipperApplication {
 					sub3.add(s10);
 					Phase ph3 = phaseRepository.findByPhaseName(p.getPhaseName());
 					ph3.setSubPhase(sub3);
+					s9.setPhase(ph3);
+					s10.setPhase(ph3);
+					subPhaseRepository.save(s9);
+					subPhaseRepository.save(s10);
 					phaseRepository.save(ph3);
 					break;
-				case "Décision":
+				case "Decision":
 					SubPhase s11 = new SubPhase(new Long(11),"Abandon");
 					SubPhase s12 = new SubPhase(new Long(12),"Suspendu");
 					SubPhase s13 = new SubPhase(new Long(13),"Réalisation");
@@ -109,6 +129,12 @@ public class HouseSkipperApplication {
 					sub4.add(s13);
 					Phase ph4 = phaseRepository.findByPhaseName(p.getPhaseName());
 					ph4.setSubPhase(sub4);
+					s11.setPhase(ph4);
+					s12.setPhase(ph4);
+					s13.setPhase(ph4);
+					subPhaseRepository.save(s11);
+					subPhaseRepository.save(s12);
+					subPhaseRepository.save(s13);
 					phaseRepository.save(ph4);
 					break;
 				case "Finalisation":
@@ -123,6 +149,14 @@ public class HouseSkipperApplication {
 					sub5.add(s17);
 					Phase ph5 = phaseRepository.findByPhaseName(p.getPhaseName());
 					ph5.setSubPhase(sub5);
+					s14.setPhase(ph5);
+					s15.setPhase(ph5);
+					s16.setPhase(ph5);
+					s17.setPhase(ph5);
+					subPhaseRepository.save(s17);
+					subPhaseRepository.save(s14);
+					subPhaseRepository.save(s15);
+					subPhaseRepository.save(s16);
 					phaseRepository.save(ph5);
 					break;
 				case "Exploitation":
@@ -133,6 +167,10 @@ public class HouseSkipperApplication {
 					sub6.add(s19);
 					Phase ph6 = phaseRepository.findByPhaseName(p.getPhaseName());
 					ph6.setSubPhase(sub6);
+					s18.setPhase(ph6);
+					s19.setPhase(ph6);
+					subPhaseRepository.save(s18);
+					subPhaseRepository.save(s19);
 					phaseRepository.save(ph6);
 					break;
 			}

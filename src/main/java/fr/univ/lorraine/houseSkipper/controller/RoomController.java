@@ -38,10 +38,7 @@ public class RoomController {
             }
 
         }
-        for (Room r: rooms
-             ) {
-            System.out.println(r.getRoomName()+"---------------------------------------");
-        }
+
         return rooms.stream().collect(Collectors.toList());
     }
 
@@ -52,12 +49,10 @@ public class RoomController {
         List<Room> rooms = new ArrayList<>();
         for (House h: houses
         ) {
-            System.out.println(houseName+"---------------------------------------"+h.getHouseName());
             if(houseName.contains(h.getHouseName())){
                 for (Room r: h.getRooms()
                 ) {
                     r.setRoomName(r.getRoomName());
-                    System.out.println(r.getRoomName()+"---------------------------------------");
                     rooms.add(r);
                 }
             }

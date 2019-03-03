@@ -23,7 +23,6 @@ public class UploadFileResponse {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
-    //@JsonIgnoreProperties("houses")
     @JsonBackReference
     private @NonNull Task task;
 
