@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "taskPJ")
+@Table(name = "pieceJointe")
 @NoArgsConstructor
 public class UploadFileResponse {
     @Id
@@ -25,11 +25,19 @@ public class UploadFileResponse {
     @JoinColumn(name = "task_id")
     //@JsonIgnoreProperties("houses")
     @JsonBackReference
-    private @NonNull Task task;
+    private Task task;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "house_id")
+    //@JsonIgnoreProperties("houses")
+    @JsonBackReference
+    private House house;
 
     @Lob
     @Column(name = "pic")
     private byte[] pic;
+
+    private String description;
 
 
     public UploadFileResponse(String fileName, String fileDownloadUri, String fileType, long size, byte[] pic) {
@@ -70,5 +78,21 @@ public class UploadFileResponse {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public House getHouse() {
+        return house;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
