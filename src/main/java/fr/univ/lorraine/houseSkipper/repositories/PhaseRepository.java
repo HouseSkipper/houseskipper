@@ -12,4 +12,6 @@ import java.util.List;
 public interface PhaseRepository extends JpaRepository<Phase, Long> {
 
     public List<Phase> findAll();
+
+    Phase findByPhaseName(String name);
 }
