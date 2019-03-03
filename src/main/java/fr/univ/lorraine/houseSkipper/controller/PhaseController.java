@@ -19,6 +19,6 @@ public class PhaseController {
 
     @GetMapping("/phases")
     public List<Phase> getAllPhases(){
-        return this.phaseRepo.findAll();
+        return this.phaseRepo.findAllByOrderByIdAsc();
     }
 }

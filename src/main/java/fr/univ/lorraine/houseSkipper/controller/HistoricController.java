@@ -20,7 +20,7 @@ public class HistoricController {
     @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
-    @GetMapping("historic")
+    @GetMapping("/historic")
     public List<Historic> userHistorics(){
         List<Historic> historics = new ArrayList<>();
         for (Task t:
@@ -33,7 +33,7 @@ public class HistoricController {
         return historics;
     }
 
-    @GetMapping("historic/{month}")
+    @GetMapping("/historic/{month}")
     public List<Historic> userHistoricsByMonth(@PathVariable int month){
         List<Historic> historics = new ArrayList<>();
         for (Task t:
@@ -51,7 +51,7 @@ public class HistoricController {
         return historics;
     }
 
-    @GetMapping("historic/{year}")
+    @GetMapping("/historic/{year}")
     public List<Historic> userHistoricsByYaer(@PathVariable int year){
         List<Historic> historics = new ArrayList<>();
         for (Task t:

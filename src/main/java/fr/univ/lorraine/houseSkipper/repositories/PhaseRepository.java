@@ -14,4 +14,6 @@ public interface PhaseRepository extends JpaRepository<Phase, Long> {
     public List<Phase> findAll();
 
     Phase findByPhaseName(String name);
+
+    public List<Phase> findAllByOrderByIdAsc();
 }
