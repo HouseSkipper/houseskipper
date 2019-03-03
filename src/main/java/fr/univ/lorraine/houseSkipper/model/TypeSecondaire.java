@@ -20,7 +20,7 @@ public class TypeSecondaire {
     private String typeS;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonBackReference(value = "typeS_task")
     private @NonNull
     Task task;
 

@@ -14,12 +14,12 @@ import java.util.List;
 @Table(name="subPhase")
 public class SubPhase {
 
-    @Id @GeneratedValue
+    @Id
     private Long id;
     private String sPhaseName;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonBackReference(value = "phase_sub")
     private @NonNull Phase phase;
 
     @OneToMany(mappedBy = "subPhase", cascade = CascadeType.ALL)

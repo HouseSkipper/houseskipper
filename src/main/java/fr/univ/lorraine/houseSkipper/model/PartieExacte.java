@@ -20,7 +20,7 @@ public class PartieExacte {
     private String local;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonBackReference(value = "partieE_task")
     private @NonNull Task task;
 
     public PartieExacte(String local){

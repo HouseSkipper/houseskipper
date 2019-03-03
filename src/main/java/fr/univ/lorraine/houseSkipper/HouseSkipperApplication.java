@@ -45,12 +45,19 @@ public class HouseSkipperApplication {
 	}
 
 	public void createDB(){
-		String[] phases = {"Redaction", "Validation", "Soumission", "Evaluation",
-				"Decision", "Finalisation", "Exploitation"};
-		for (int i = 0; i < phases.length; i++){
-			System.out.println(phaseRepository.findAll().size() + "----------" + subPhaseRepository.findAll().size() + "----------" );
-			phaseRepository.save(new Phase(new Long(i), phases[i]));
-		}
+		//String[] phases = {"Redaction", "Validation", "Soumission", "Evaluation",
+		//		"Decision", "Finalisation", "Exploitation"};
+		phaseRepository.save(new Phase(new Long(1), "Redaction"));
+		phaseRepository.save(new Phase(new Long(2), "Validation"));
+		phaseRepository.save(new Phase(new Long(3), "Soumission"));
+		phaseRepository.save(new Phase(new Long(4), "Evaluation"));
+		phaseRepository.save(new Phase(new Long(5), "Decision"));
+		phaseRepository.save(new Phase(new Long(6), "Finalisation"));
+		phaseRepository.save(new Phase(new Long(7), "Exploitation"));
+		//for (int i = 0; i < phases.length; i++){
+		//	System.out.println(phaseRepository.findAll().size() + "----------" + subPhaseRepository.findAll().size() + "----------" );
+		//	phaseRepository.save(new Phase(new Long(i), phases[i]));
+		//}
 
 		for (Phase p:
 				phaseRepository.findAll()) {
