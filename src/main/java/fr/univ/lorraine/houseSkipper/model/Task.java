@@ -22,19 +22,18 @@ public class Task {
     private @NonNull String residence;
     private @NonNull String description;
     private @NonNull Date start_date;
-
     private  String type;
     private @NonNull String connaissance;
     private @NonNull String resultat;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value = "user_task")
     private @NonNull ApplicationUser user;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @JsonManagedReference(value = "files_task")
     private List<UploadFileResponse> files = new ArrayList<>();
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

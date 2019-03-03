@@ -42,7 +42,7 @@ public class HistoricController {
             LocalDateTime now = LocalDateTime.now();
             for (Historic h:
                     t.getHistorics()) {
-                if(h.getDate().getMonth() == now.getMonth().getValue()){
+                if(h.getDate().getMonth().getValue() == now.getMonth().getValue()){
                     historics.add(h);
                 }
             }

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -15,7 +15,7 @@ public class Historic {
 
     @Id @GeneratedValue
     private Long id;
-    private Date date;
+    private LocalDate date;
 
     @JsonProperty
     @JsonInclude(JsonInclude.Include.NON_NULL)

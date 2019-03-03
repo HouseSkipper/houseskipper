@@ -45,7 +45,7 @@ public class ApplicationUser {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     //@JsonIgnoreProperties("user")
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user_task")
     private List<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -47,8 +47,8 @@ public class TaskController {
         return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
 
-    @PostMapping("tasks/next")
-    public Task toNextPhase(@Valid @RequestBody Task task)
+    @PutMapping("tasks/next/{taskId}")
+    public Task toNextPhase(@PathVariable String taskId, @Valid @RequestBody Task task)
     {
         System.out.println(repository.findById(task.getId()).get().getCurrentPhase() + "-)-)-)-)-)");
         Task t = repository.findById(task.getId()).get();
@@ -126,7 +126,7 @@ public class TaskController {
             }
         }
         Historic h = new Historic();
-        h.setDate(new Date());
+        h.setDate(LocalDate.now());
         h.setTask(task);
         for (SubPhase s:
              ph.getSubPhase()) {
