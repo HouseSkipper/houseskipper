@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name="phase")
 public class Phase {
 
-    @Id @GeneratedValue
+    @Id
     private Long id;
     private String phaseName;
 

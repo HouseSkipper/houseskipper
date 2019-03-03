@@ -27,6 +27,7 @@ public class SubPhase {
     private List<Historic> historics = new ArrayList<>();
 
     public SubPhase(){}
+
     public SubPhase(Long id, String sPhaseName){
         this.id = id;
         this.sPhaseName = sPhaseName;

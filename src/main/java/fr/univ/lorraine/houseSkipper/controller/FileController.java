@@ -36,7 +36,7 @@ public class FileController {
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String Id) {
         try{
                     System.out.println("-----------" + Id);
-                    String fileName = fileStorageService.storeFile(file, Id);
+                    String fileName = fileStorageService.storeFile(file, Id, 0, "");
 
                      String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                             .path("/downloadFile/")

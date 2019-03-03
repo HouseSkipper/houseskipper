@@ -3,15 +3,26 @@ package fr.univ.lorraine.houseSkipper.controller;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.House;
 import fr.univ.lorraine.houseSkipper.model.Room;
+import fr.univ.lorraine.houseSkipper.model.UploadFileResponse;
 import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
+import fr.univ.lorraine.houseSkipper.service.FileStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +34,10 @@ public class HouseController {
     private RoomRepository roomRepository;
     private UserRepository userRepository;
     private AuthenticatedUserService authenticatedUserService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
-    public HouseController(HouseRepository repository, RoomRepository roomRepository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService){
+    public HouseController(HouseRepository repository, RoomRepository roomRepository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService) {
         this.houseRepository = repository;
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
@@ -36,11 +49,11 @@ public class HouseController {
         List<Room> rooms = houseBody.getRooms();
         houseBody.setRooms(null);
 
-        ApplicationUser user =  this.authenticatedUserService.getAuthenticatedUser();
+        ApplicationUser user = this.authenticatedUserService.getAuthenticatedUser();
         houseBody.setUser(user);
         House res = houseRepository.save(houseBody);
 
-        for(Room room: rooms){
+        for (Room room : rooms) {
             room.setHouse(houseBody);
             roomRepository.save(room);
         }
@@ -48,36 +61,55 @@ public class HouseController {
         return ResponseEntity.ok(res);
     }
 
+    @PostMapping("/houses/uploadFile/{houseId}")
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("description") String desc, @PathVariable String houseId) {
+        try {
+            String fileName = fileStorageService.storeFile(file, houseId, 1, desc);
+
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/downloadFile/")
+                    .path(fileName)
+                    .toUriString();
+            System.out.println(fileDownloadUri + "---------!!!" + fileName + "-----------!!");
+
+            return new UploadFileResponse(fileName, fileDownloadUri,
+                    file.getContentType(), file.getSize(), file.getBytes());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return new UploadFileResponse();
+        }
+    }
+
     @GetMapping("/houses")
-    public Collection<House> houseList(){
+    public Collection<House> houseList() {
         return houseRepository.findAll().stream().collect(Collectors.toList());
     }
 
     @GetMapping("/houses/house")
-    public Collection<House> MyhousesList(){
+    public Collection<House> MyhousesList() {
         return houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser()).stream().collect(Collectors.toList());
     }
 
     @GetMapping("/houses/{houseId}")
-    public House Myhouse(@PathVariable Long houseId){
+    public House Myhouse(@PathVariable Long houseId) {
         return houseRepository.findById(houseId).map(house -> {
-            if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
+            if (house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()) {
                 return house;
-            }else{
+            } else {
                 return null;
             }
         }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la recherche d'une maison"));
     }
 
     @PutMapping("/houses/{houseId}")
-    public House modifierHouser(@Valid @RequestBody House houseBody){
+    public House modifierHouser(@Valid @RequestBody House houseBody) {
         return houseRepository.findById(houseBody.getId()).map(house -> {
-            if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
+            if (house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()) {
                 house = houseBody;
                 house.setUser(this.authenticatedUserService.getAuthenticatedUser());
                 houseRepository.save(house);
                 return house;
-            }else{
+            } else {
                 return null;
             }
         }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la modification d'une maison"));
@@ -86,10 +118,10 @@ public class HouseController {
     @DeleteMapping("/houses/{houseId}")
     public ResponseEntity<?> deleteHouse(@PathVariable Long houseId) {
         return houseRepository.findById(houseId).map(house -> {
-            if(house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()){
+            if (house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()) {
                 houseRepository.delete(house);
                 return ResponseEntity.ok().build();
-            }else{
+            } else {
                 return ResponseEntity.badRequest().build();
             }
         }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la suppression"));
