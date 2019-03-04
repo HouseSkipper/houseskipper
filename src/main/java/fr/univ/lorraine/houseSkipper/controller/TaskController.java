@@ -100,7 +100,7 @@ public class TaskController {
         task.setHistorics(null);
         task.setPartiesExacte(null);
         task.setTypeSecondaires(null);
-
+        task.setCommentaires(null);
         Phase ph = phaseRepository.findByPhaseName("Redaction");
         System.out.println(phaseRepository.findAll().size() + "°°°°°°°°°ààà");
         ApplicationUser user = authenticatedUserService.getAuthenticatedUser();
@@ -154,11 +154,10 @@ public class TaskController {
             if (task.getUser().equals(authenticatedUserService.getAuthenticatedUser())) {
                 task.setDescription(taskRequest.getDescription());
                 task.setPartie(taskRequest.getPartie());
-                task.setStatus(taskRequest.getStatus());
                 task.setType(taskRequest.getType());
                 task.setConnaissance(taskRequest.getConnaissance());
                 task.setResultat(taskRequest.getResultat());
-
+                task.setStatus(task.getStatus());
                 repository.saveAndFlush(task);
 
                 for (PartieExacte pa:
