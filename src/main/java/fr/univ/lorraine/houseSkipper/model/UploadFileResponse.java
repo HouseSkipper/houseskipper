@@ -23,7 +23,7 @@ public class UploadFileResponse {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
-    @JsonBackReference
+    @JsonBackReference(value = "files_task")
     private Task task;
 
     @ManyToOne(fetch = FetchType.EAGER)
