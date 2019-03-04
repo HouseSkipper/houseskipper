@@ -147,7 +147,7 @@ public class Skill {
                 sc.getSubSkills().add(new SubSkill("Rognage de souches", sc));
                 sc.getSubSkills().add(new SubSkill("Dessouchage", sc));
                 sc.getSubSkills().add(new SubSkill("Reboisement", sc));
-                break;
+                break;//push
             case "Petits travaux":
                 sc = new SkillCategory("Bricolage", this);
                 this.skillCategories.add(sc);
