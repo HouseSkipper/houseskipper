@@ -80,4 +80,14 @@ public class Task {
         this.resultat = resultat;
         this.residence = houseName;
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", partie='" + partie + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

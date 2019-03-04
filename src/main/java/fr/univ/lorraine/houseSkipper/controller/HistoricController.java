@@ -25,16 +25,19 @@ public class HistoricController {
         List<Historic> historics = new ArrayList<>();
         for (Task t:
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
+            t.setCurrentPhase(t.getStatus().getPhaseName());
             for (Historic h:
-                 t.getHistorics()) {
+                    t.getHistorics()) {
+                h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
+                h.setCurrentPhase(h.getPhase().getPhaseName());
                 historics.add(h);
             }
         }
         return historics;
     }
 
-    @GetMapping("/historic/{month}")
-    public List<Historic> userHistoricsByMonth(@PathVariable int month){
+    @GetMapping("/historic/month")
+    public List<Historic> userHistoricsByMonth(){
         List<Historic> historics = new ArrayList<>();
         for (Task t:
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
@@ -43,6 +46,8 @@ public class HistoricController {
             for (Historic h:
                     t.getHistorics()) {
                 if(h.getDate().getMonth().getValue() == now.getMonth().getValue()){
+                    h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
+                    h.setCurrentPhase(h.getPhase().getPhaseName());
                     historics.add(h);
                 }
             }
@@ -51,8 +56,8 @@ public class HistoricController {
         return historics;
     }
 
-    @GetMapping("/historic/{year}")
-    public List<Historic> userHistoricsByYaer(@PathVariable int year){
+    @GetMapping("/historic/year")
+    public List<Historic> userHistoricsByYaer(){
         List<Historic> historics = new ArrayList<>();
         for (Task t:
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
@@ -62,6 +67,8 @@ public class HistoricController {
             for (Historic h:
                     t.getHistorics()) {
                 if(h.getDate().getYear() == now.getYear()){
+                    h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
+                    h.setCurrentPhase(h.getPhase().getPhaseName());
                     historics.add(h);
                 }
             }

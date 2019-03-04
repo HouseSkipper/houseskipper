@@ -41,6 +41,7 @@ public class TaskController {
             for (Historic h:
                  t.getHistorics()) {
                 h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
+                h.setCurrentPhase(h.getPhase().getPhaseName());
                 System.out.println(h.getSubPhase().getSPhaseName() + "=========");
             }
         }
@@ -89,19 +90,18 @@ public class TaskController {
 
 
 
-    @PostMapping("tasks")
+    @PostMapping("/tasks")
     public Task createTask(@Valid @RequestBody Task task) {
+        System.out.println(task);
         List<PartieExacte> partieExactes = task.getPartiesExacte();
         List<TypeSecondaire> typeSecondaires = task.getTypeSecondaires();
         List<Historic> historics = task.getHistorics();
-        Phase phase = task.getStatus();
         //task.setStatus(null);
         task.setHistorics(null);
         task.setPartiesExacte(null);
         task.setTypeSecondaires(null);
-        System.out.println(task.getStatus().getPhaseName() + "°°°°°°°°°ààà");
 
-        Phase ph = phaseRepository.findByPhaseName(phase.getPhaseName());
+        Phase ph = phaseRepository.findByPhaseName("Redaction");
         System.out.println(phaseRepository.findAll().size() + "°°°°°°°°°ààà");
         ApplicationUser user = authenticatedUserService.getAuthenticatedUser();
         task.setUser(user);
@@ -128,6 +128,7 @@ public class TaskController {
         Historic h = new Historic();
         h.setDate(LocalDate.now());
         h.setTask(task);
+        h.setPhase(ph);
         for (SubPhase s:
              ph.getSubPhase()) {
             System.out.println(s.getSPhaseName()+")))))))))))))°°°°");

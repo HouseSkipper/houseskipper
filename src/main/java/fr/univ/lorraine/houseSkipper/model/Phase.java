@@ -31,10 +31,15 @@ public class Phase {
     @JsonBackReference
     private Task task;
 */
-@OneToMany(mappedBy = "status", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference(value = "phase_task")
     private List<Task> tasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference(value = "histo_Phase")
+    private List<Historic> historics = new ArrayList<>();
 
     public Phase(){}
 
