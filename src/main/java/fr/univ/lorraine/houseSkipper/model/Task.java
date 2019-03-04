@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"status"})
 @Table(name = "task")
 public class Task {
     @Id @GeneratedValue
@@ -78,5 +79,15 @@ public class Task {
         this.connaissance = connaissance;
         this.resultat = resultat;
         this.residence = houseName;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", partie='" + partie + '\'' +
+                ", status=" + status +
+                '}';
     }
 }
