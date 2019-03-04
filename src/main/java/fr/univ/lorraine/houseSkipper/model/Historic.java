@@ -22,9 +22,18 @@ public class Historic {
     @Transient
     private String currentSubPhase;
 
+    @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Transient
+    private String currentPhase;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonBackReference(value = "histo_sPhase")
     private @NonNull SubPhase subPhase;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference(value = "histo_Phase")
+    private @NonNull Phase phase;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference(value = "histo_task")

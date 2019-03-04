@@ -23,7 +23,7 @@ public class SubPhase {
     private @NonNull Phase phase;
 
     @OneToMany(mappedBy = "subPhase", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value = "histo_sPhase")
     private List<Historic> historics = new ArrayList<>();
 
     public SubPhase(){}
