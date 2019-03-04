@@ -56,6 +56,7 @@ public class UserController {
     public void signUp(@RequestBody ApplicationUser applicationUser) {
         ApplicationUser user = UserRepository.findByUsername(applicationUser.getUsername());
         if (user != null) {
+            System.out.println(user.getUsername());
             throw new UserEmailAlreadyExists();
         } else {
             applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));

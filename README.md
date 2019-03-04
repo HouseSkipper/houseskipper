@@ -3,7 +3,7 @@
 curl -H "Content-Type: application/json" -X POST -d '{
     "username": "admin",
     "password": "password"
-}' http://localhost:8080/users/sign-up
+}' http://houseskipper.ddns.net:56723/users/sign-up
 
 ## Login pour récupérer un token valide
 curl -i -H "Content-Type: application/json" -X POST -d '{
