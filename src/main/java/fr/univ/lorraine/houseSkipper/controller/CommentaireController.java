@@ -9,8 +9,10 @@ import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 public class CommentaireController {
@@ -23,10 +25,9 @@ public class CommentaireController {
     PhaseRepository phaseRepository;
 
     @PostMapping("commentaire/{id}")
-    public Commentaire addComment(@PathVariable String id, @RequestParam("commentaire") Commentaire commentaire){
+    public Commentaire addComment(@PathVariable String id, @Valid @RequestBody Commentaire commentaire){
         Task task = this.taskRepository.findByNom(id).get(0);
-        Phase phase = this.phaseRepository.findByPhaseName(task.getCurrentPhase());
-        System.out.println("tskBudget : !!!!-----------------" + task.getPartiesExacte().size());
+        Phase phase = this.phaseRepository.findByPhaseName(commentaire.getPhasec());
         commentaire.setTask(task);
         commentaire.setPhase(phase);
         return commentairesRepository.save(commentaire);
