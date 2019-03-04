@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"status"})
 @Table(name = "task")
 public class Task {
     @Id @GeneratedValue
