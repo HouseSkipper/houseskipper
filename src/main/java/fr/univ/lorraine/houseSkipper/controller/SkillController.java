@@ -1,7 +1,6 @@
 package fr.univ.lorraine.houseSkipper.controller;
 
 import fr.univ.lorraine.houseSkipper.model.Skill;
-import fr.univ.lorraine.houseSkipper.model.SubSkill;
 import fr.univ.lorraine.houseSkipper.repositories.SkillRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
@@ -17,13 +16,11 @@ import java.util.Optional;
 public class SkillController {
 
     private SkillRepository skillRepository;
-    private UserRepository userRepository;
     private AuthenticatedUserService authenticatedUserService;
 
 
     public SkillController(SkillRepository skillRepository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService){
         this.skillRepository = skillRepository;
-        this.userRepository = userRepository;
         this.authenticatedUserService = authenticatedUserService;
 
     }
