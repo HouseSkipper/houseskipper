@@ -7,6 +7,8 @@ import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +17,7 @@ import java.util.*;
 @Entity
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties({"files"})
 @Table(name="house")
 public class House{
 
@@ -58,6 +61,11 @@ public class House{
     //@JsonIgnoreProperties("houses")
     @JsonBackReference
     private @NonNull ApplicationUser user;
+
+    @OneToMany(mappedBy = "house", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    private List<UploadFileResponse> files = new ArrayList<>();
 
 
 

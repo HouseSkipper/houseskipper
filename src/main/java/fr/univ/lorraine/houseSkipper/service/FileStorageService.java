@@ -3,9 +3,11 @@ package fr.univ.lorraine.houseSkipper.service;
 import fr.univ.lorraine.houseSkipper.configuration.FileStorageProperties;
 import fr.univ.lorraine.houseSkipper.exceptions.FileStorageException;
 import fr.univ.lorraine.houseSkipper.exceptions.MyFileNotFoundException;
+import fr.univ.lorraine.houseSkipper.model.House;
 import fr.univ.lorraine.houseSkipper.model.Task;
 import fr.univ.lorraine.houseSkipper.model.UploadFileResponse;
 import fr.univ.lorraine.houseSkipper.repositories.FileRepository;
+import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -29,6 +31,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FileStorageService {
@@ -36,13 +39,15 @@ public class FileStorageService {
     public final Path fileStorageLocation;
     private FileRepository fileRepository;
     private TaskRepository repository;
+    private HouseRepository houseRepository;
 
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties, FileRepository fileRepository, TaskRepository repository) {
+    public FileStorageService(FileStorageProperties fileStorageProperties, FileRepository fileRepository, TaskRepository repository, HouseRepository houseRepository) {
         this.fileRepository = fileRepository;
         this.repository = repository;
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
+        this.houseRepository = houseRepository;
 
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -51,7 +56,7 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file, String Id) {
+    public String storeFile(MultipartFile file, String Id, int label, String desc) {
         // Normalize file name
         String fileN = StringUtils.cleanPath(file.getOriginalFilename());
         String fileName = fileN.replace(" ", "");
@@ -69,13 +74,24 @@ public class FileStorageService {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
 
             UploadFileResponse fileResponse = new UploadFileResponse(fileName, filePath.toUri().toString(), "pdf/image", file.getSize(), file.getBytes());
+            fileResponse.setDescription(desc);
             System.out.println("FileResponse : -----------------" + fileResponse.getFileName());
 
-            Task task = this.repository.findByNom(Id).get(0);
+            if(label == 0){
 
-                System.out.println("tskBudget : !!!!-----------------" + task.getPartieExacte());
+                Task task = this.repository.findByNom(Id).get(0);
+
+                System.out.println("tskBudget : !!!!-----------------" + task.getPartiesExacte().size());
                 fileResponse.setTask(task);
                 fileRepository.save(fileResponse);
+            } else if (label == 1) {
+
+                Optional<House> house = this.houseRepository.findById(Long.parseLong(Id));
+                fileResponse.setHouse(house.get());
+                fileRepository.save(fileResponse);
+
+            }
+
 
             return fileName;
         } catch (IOException ex) {

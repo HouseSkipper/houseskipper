@@ -1,5 +1,6 @@
 package fr.univ.lorraine.houseSkipper.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NonNull;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Data
+@JsonIgnoreProperties({"houses", "skills", "tasks", "shortcuts"})
 public class ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +45,7 @@ public class ApplicationUser {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     //@JsonIgnoreProperties("user")
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user_task")
     private List<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

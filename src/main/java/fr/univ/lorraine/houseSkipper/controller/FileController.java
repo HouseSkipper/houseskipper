@@ -36,7 +36,7 @@ public class FileController {
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String Id) {
         try{
                     System.out.println("-----------" + Id);
-                    String fileName = fileStorageService.storeFile(file, Id);
+                    String fileName = fileStorageService.storeFile(file, Id, 0, "");
 
                      String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                             .path("/downloadFile/")
@@ -93,7 +93,7 @@ public class FileController {
         List<String> fileName = new ArrayList<>();
         if(task.isPresent()){
             Task tsk = task.get();
-            System.out.println("StoreFile : -----------------" + tsk.getPartieExacte());
+            System.out.println("StoreFile : -----------------" + tsk.getPartiesExacte().size());
             for (UploadFileResponse f: tsk.getFiles()
             ) {
                 System.out.println("StoreFile : -----------------" + f.getFileName());
