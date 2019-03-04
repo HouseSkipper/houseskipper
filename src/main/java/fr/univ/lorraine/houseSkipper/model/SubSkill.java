@@ -21,12 +21,12 @@ public class SubSkill {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
-    private @NonNull Skill skill;
+    private @NonNull SkillCategory skillCategory;
 
-    public SubSkill(String name, Skill skill){
+    public SubSkill(String name, SkillCategory skillCategory){
         this.type = name;
-        this.nb_works = 1;
-        this.skill = skill;
+        this.nb_works = 0;
+        this.skillCategory = skillCategory;
     }
 
 }

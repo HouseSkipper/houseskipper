@@ -24,7 +24,7 @@ public class SubSkillControler {
     public SubSkill updateSkill(@PathVariable Long subSkillId, @Valid @RequestBody SubSkill subSkillRequest) {
         return this.subSkillRepository.findById(subSkillId).map(skill -> {
             skill.setNb_works(subSkillRequest.getNb_works());
-            skill.getSkill().average();
+            skill.getSkillCategory().getSkill().average();
             return this.subSkillRepository.save(skill);
         }).orElseThrow(() -> new ResourceNotFoundException("subSkill " + subSkillId + " not found"));
     }
