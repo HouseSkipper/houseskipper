@@ -4,6 +4,7 @@ import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.House;
 import fr.univ.lorraine.houseSkipper.model.Room;
 import fr.univ.lorraine.houseSkipper.model.UploadFileResponse;
+import fr.univ.lorraine.houseSkipper.repositories.FileRepository;
 import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
@@ -36,6 +37,8 @@ public class HouseController {
     private AuthenticatedUserService authenticatedUserService;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private FileRepository fileRepository;
 
     public HouseController(HouseRepository repository, RoomRepository roomRepository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService) {
         this.houseRepository = repository;
@@ -87,7 +90,12 @@ public class HouseController {
 
     @GetMapping("/houses/house")
     public Collection<House> MyhousesList() {
-        return houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser()).stream().collect(Collectors.toList());
+        List<House> houses = houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser());
+        for(House e: houses){
+            int taille = this.fileRepository.findAllByHouse(e).size();
+            e.setNbDocument(taille);
+        }
+        return houses;
     }
 
     @GetMapping("/houses/{houseId}")
@@ -99,6 +107,12 @@ public class HouseController {
                 return null;
             }
         }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la recherche d'une maison"));
+    }
+
+    @GetMapping("/houses/{houseId}/files")
+    public Collection<UploadFileResponse> MyFilesHouse(@PathVariable Long houseId) {
+        House house = houseRepository.findById(houseId).get();
+        return this.fileRepository.findAllByHouse(house).stream().collect(Collectors.toList());
     }
 
     @PutMapping("/houses/{houseId}")
