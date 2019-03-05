@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name="subPhase")
 public class SubPhase {
 
-    @Id
+    @Id @GeneratedValue
     private Long id;
     private String sPhaseName;
 

@@ -20,10 +20,12 @@ public class TaskController {
     private TypeSecondaireRepository typeSecondaireRepository;
     private PhaseRepository phaseRepository;
     private HistoricRepository historicRepository;
+    private SubPhaseRepository subPhaseRepository;
 
 
     public TaskController(TaskRepository repository, AuthenticatedUserService authenticatedUserService, PartieExacteRepository partieExacteRepository,
-                          TypeSecondaireRepository typeSecondaireRepository, PhaseRepository phaseRepository, HistoricRepository historicRepository){
+                          TypeSecondaireRepository typeSecondaireRepository, PhaseRepository phaseRepository, HistoricRepository historicRepository,
+                          SubPhaseRepository subPhaseRepository){
 
         this.repository = repository;
         this.authenticatedUserService = authenticatedUserService;
@@ -31,6 +33,7 @@ public class TaskController {
         this.typeSecondaireRepository = typeSecondaireRepository;
         this.phaseRepository = phaseRepository;
         this.historicRepository = historicRepository;
+        this.subPhaseRepository= subPhaseRepository;
     }
 
     @GetMapping("tasks")
@@ -44,29 +47,40 @@ public class TaskController {
                 h.setCurrentPhase(h.getPhase().getPhaseName());
                 System.out.println(h.getSubPhase().getSPhaseName() + "=========");
             }
+            for (Commentaire c:
+                 t.getCommentaires()) {
+                c.setPhasec(c.getPhase().getPhaseName());
+            }
         }
         return authenticatedUserService.getAuthenticatedUser().getTasks();
     }
 
-    @PutMapping("tasks/next/{taskId}")
+    @PostMapping("tasks/next/{taskId}")
     public Task toNextPhase(@PathVariable String taskId, @Valid @RequestBody Task task)
     {
-        System.out.println(repository.findById(task.getId()).get().getCurrentPhase() + "-)-)-)-)-)");
-        Task t = repository.findById(task.getId()).get();
+       Task t = repository.findByNom(task.getNom()).get(0);
+        System.out.println(t.getStatus().getPhaseName() + "-)-)-)-)-)");
+
+
         if(t.getUser().equals(authenticatedUserService.getAuthenticatedUser())) {
-            Phase p = phaseRepository.findByPhaseName(t.getCurrentPhase());
-            if (phaseRepository.findAll().size() < p.getId()+1){
-                Phase pnext =  phaseRepository.findById(p.getId()+1).get();
+            Phase p = phaseRepository.findByPhaseName(t.getStatus().getPhaseName());
+            System.out.println(phaseRepository.findAll().size());
+            System.out.println(p.getId());
+            if (phaseRepository.findAll().size() > p.getId()){
+                Phase pnext =  phaseRepository.findById(new Long(p.getId()+1)).get();
 
                 t.setStatus(null);
                 t.setStatus(pnext);
                 t.setCurrentPhase(pnext.getPhaseName());
+                System.out.println(pnext.getPhaseName());
 
             }
             repository.saveAndFlush(t);
-            System.out.println(repository.findById(task.getId()).get().getCurrentPhase() + "-)-)-)-)-)");
+            System.out.println(repository.findById(task.getId()).get().getStatus().getPhaseName() + "-)-)-)-)-)");
             return repository.findById(task.getId()).get();
         }
+
+
         return new Task();
 
     }
@@ -79,7 +93,13 @@ public class TaskController {
                     return new Task();
                 }else {
                     task.setCurrentPhase(task.getStatus().getPhaseName());
+                    task.setCurrentPhaseId(task.getStatus().getId());
                     task.getHistorics().get(task.getHistorics().size() - 1).setCurrentSubPhase(task.getHistorics().get(task.getHistorics().size() - 1).getSubPhase().getSPhaseName());
+                    System.out.println(task.getCurrentPhase() + ")))----" + task.getCurrentPhaseId());
+                    for (Commentaire c:
+                            task.getCommentaires()) {
+                        c.setPhasec(c.getPhase().getPhaseName());
+                    }
                     return task;
                 }
             }return new Task();
@@ -137,7 +157,7 @@ public class TaskController {
         h.setSubPhase(ph.getSubPhase().get(1));
         historicRepository.save(h);
         System.out.println(k.getStatus().getPhaseName() + "°°°°°°°°°");
-        return task;
+        return repository.findById(t.getId()).get();
 
     }
 
