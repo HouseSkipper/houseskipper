@@ -48,6 +48,7 @@ public class House{
     private  int surfaceExterieurDroit;
     private  int surfaceExterieurGauche;
     private  int surfaceExterieurArriere;
+    private int nbDocument;
 
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     //@JsonIgnoreProperties("house")

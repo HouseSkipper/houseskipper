@@ -87,6 +87,8 @@ public class FileStorageService {
             } else if (label == 1) {
 
                 Optional<House> house = this.houseRepository.findById(Long.parseLong(Id));
+                int length = this.fileRepository.findAllByHouse(house.get()).size();
+                house.get().setNbDocument(length + 1);
                 fileResponse.setHouse(house.get());
                 fileRepository.save(fileResponse);
 
