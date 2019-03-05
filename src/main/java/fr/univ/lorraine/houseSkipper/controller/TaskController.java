@@ -74,8 +74,17 @@ public class TaskController {
                 t.setCurrentPhase(pnext.getPhaseName());
                 System.out.println(pnext.getPhaseName());
 
+
+                repository.saveAndFlush(t);
+                Historic h = new Historic();
+                h.setDate(LocalDate.now());
+                h.setTask(task);
+                h.setPhase(pnext);
+                h.setSubPhase(pnext.getSubPhase().get(1));
+                historicRepository.save(h);
+
             }
-            repository.saveAndFlush(t);
+
             System.out.println(repository.findById(task.getId()).get().getStatus().getPhaseName() + "-)-)-)-)-)");
             return repository.findById(task.getId()).get();
         }
