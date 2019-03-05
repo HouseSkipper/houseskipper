@@ -22,7 +22,7 @@ public class Task {
     private @NonNull String partie;
     private @NonNull String residence;
     private @NonNull String description;
-    private @NonNull Date start_date;
+    private  Date start_date;
     private  String type;
     private @NonNull String connaissance;
     private @NonNull String resultat;
@@ -58,6 +58,11 @@ public class Task {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Transient
     private String currentPhase;
+
+    @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Transient
+    private Long currentPhaseId;
     /*
 
     @OneToOne(mappedBy = "task", cascade=CascadeType.ALL)
@@ -66,7 +71,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference(value = "phase_task")
-    private @NonNull Phase status;
+    private Phase status;
 
     public Task() {}
 

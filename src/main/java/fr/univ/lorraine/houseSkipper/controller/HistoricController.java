@@ -6,7 +6,6 @@ import fr.univ.lorraine.houseSkipper.model.Task;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -26,12 +25,12 @@ public class HistoricController {
         for (Task t:
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
             t.setCurrentPhase(t.getStatus().getPhaseName());
-            for (Historic h:
-                    t.getHistorics()) {
+            Historic h = t.getHistorics().get(t.getHistorics().size()-1);
                 h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
                 h.setCurrentPhase(h.getPhase().getPhaseName());
                 historics.add(h);
-            }
+
+
         }
         return historics;
     }
@@ -43,14 +42,13 @@ public class HistoricController {
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            for (Historic h:
-                    t.getHistorics()) {
+            Historic h = t.getHistorics().get(t.getHistorics().size()-1);
                 if(h.getDate().getMonth().getValue() == now.getMonth().getValue()){
                     h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
                     h.setCurrentPhase(h.getPhase().getPhaseName());
                     historics.add(h);
                 }
-            }
+
 
         }
         return historics;
@@ -64,14 +62,13 @@ public class HistoricController {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
-            for (Historic h:
-                    t.getHistorics()) {
+            Historic h = t.getHistorics().get(t.getHistorics().size()-1);
                 if(h.getDate().getYear() == now.getYear()){
                     h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
                     h.setCurrentPhase(h.getPhase().getPhaseName());
                     historics.add(h);
                 }
-            }
+
         }
         return historics;
     }
