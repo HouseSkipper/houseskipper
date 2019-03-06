@@ -12,6 +12,7 @@ import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import fr.univ.lorraine.houseSkipper.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -109,10 +111,26 @@ public class HouseController {
         }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la recherche d'une maison"));
     }
 
-    @GetMapping("/houses/{houseId}/files")
+    @GetMapping("/houses/uploadFile/{houseId}")
     public Collection<UploadFileResponse> MyFilesHouse(@PathVariable Long houseId) {
         House house = houseRepository.findById(houseId).get();
-        return this.fileRepository.findAllByHouse(house).stream().collect(Collectors.toList());
+        if(house.getUser() == this.authenticatedUserService.getAuthenticatedUser()){
+            return this.fileRepository.findAllByHouse(house).stream().collect(Collectors.toList());
+        } else {
+            return new ArrayList<UploadFileResponse>();
+        }
+
+    }
+
+    @GetMapping("/houses/file/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id){
+        UploadFileResponse file = this.fileRepository.findById(id).get();
+        if (file.getHouse().getUser() == this.authenticatedUserService.getAuthenticatedUser()){
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                    .body(file.getPic());
+        }
+        return ResponseEntity.status(404).body(null);
     }
 
     @PutMapping("/houses/{houseId}")
