@@ -66,7 +66,7 @@ public class House{
     @JsonBackReference
     private @NonNull ApplicationUser user;
 
-    @OneToMany(mappedBy = "house", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "house", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<UploadFileResponse> files = new ArrayList<>();
