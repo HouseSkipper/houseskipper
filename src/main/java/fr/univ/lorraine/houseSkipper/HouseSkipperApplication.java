@@ -173,13 +173,6 @@ public class HouseSkipperApplication {
 			}
 
 		}
-		for (Phase p:
-				phaseRepository.findAll()) {
-			for (SubPhase s:
-					p.getSubPhase()) {
-				System.out.println(p.getId() + "-----" + p.getPhaseName() + "------" + s.getId() + "----" + s.getSPhaseName());
-			}
-		}
 }
 
 	@Bean

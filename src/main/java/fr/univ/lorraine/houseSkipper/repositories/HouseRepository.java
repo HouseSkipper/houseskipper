@@ -12,4 +12,5 @@ import java.util.List;
 public interface HouseRepository extends JpaRepository<House, Long>{
 
     public List<House> findAllByUser(ApplicationUser user);
+    House findByHouseName(String houseName);
 }

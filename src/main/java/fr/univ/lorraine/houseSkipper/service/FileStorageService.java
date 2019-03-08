@@ -42,6 +42,9 @@ public class FileStorageService {
     private HouseRepository houseRepository;
 
     @Autowired
+    private AuthenticatedUserService authenticatedUserService;
+
+    @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties, FileRepository fileRepository, TaskRepository repository, HouseRepository houseRepository) {
         this.fileRepository = fileRepository;
         this.repository = repository;
@@ -75,15 +78,18 @@ public class FileStorageService {
 
             UploadFileResponse fileResponse = new UploadFileResponse(fileName, filePath.toUri().toString(), "pdf/image", file.getSize(), file.getBytes());
             fileResponse.setDescription(desc);
-            System.out.println("FileResponse : -----------------" + fileResponse.getFileName());
 
             if(label == 0){
 
-                Task task = this.repository.findByNom(Id).get(0);
 
-                System.out.println("tskBudget : !!!!-----------------" + task.getPartiesExacte().size());
-                fileResponse.setTask(task);
-                fileRepository.save(fileResponse);
+                for (Task tt : this.repository.findByNom(Id)){
+                    if (tt.getUser() == authenticatedUserService.getAuthenticatedUser()){
+                        fileResponse.setTask(tt);
+                        fileRepository.saveAndFlush(fileResponse);
+                    }
+                }
+
+
             } else if (label == 1) {
 
                 Optional<House> house = this.houseRepository.findById(Long.parseLong(Id));
@@ -127,8 +133,6 @@ public class FileStorageService {
 
     public ResponseEntity<?> downloadFile(String file, HttpServletRequest request){
         String fileName = file.replace("\\s", "");
-        System.out.println("Request received to download file");
-        System.out.println("File to download :"+fileName);
         try{
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());

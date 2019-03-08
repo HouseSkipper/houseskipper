@@ -32,17 +32,17 @@ public class FileController {
     @Autowired
     private FileRepository fileRepository;
 
+
+
     @PostMapping("/uploadFile/{Id}")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String Id) {
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("description") String description, @PathVariable String Id) {
         try{
-                    System.out.println("-----------" + Id);
-                    String fileName = fileStorageService.storeFile(file, Id, 0, "");
+                    String fileName = fileStorageService.storeFile(file, Id, 0, description);
 
                      String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                             .path("/downloadFile/")
                             .path(fileName)
                             .toUriString();
-                    System.out.println(fileDownloadUri + "---------!!!" + fileName + "-----------!!");
 
                     return new UploadFileResponse(fileName, fileDownloadUri,
                             file.getContentType(), file.getSize(), file.getBytes());
@@ -61,7 +61,6 @@ public class FileController {
             fileResponses = fileRepository.findAllByTask(tsk);
         }
 
-        System.out.println(fileResponses.size()+"------------------FilesSize");
         for (UploadFileResponse file: fileResponses
              ) {
             if (file.getFileName().equals(fileName)){
@@ -88,15 +87,12 @@ public class FileController {
 
     @GetMapping("/fileNames/{taskId}")
     public List<String> fileNames(@PathVariable Long taskId) {
-        System.out.println("StoreFile : -----------------" + taskId);
         Optional<Task> task = this.repository.findById(taskId);
         List<String> fileName = new ArrayList<>();
         if(task.isPresent()){
             Task tsk = task.get();
-            System.out.println("StoreFile : -----------------" + tsk.getPartiesExacte().size());
             for (UploadFileResponse f: tsk.getFiles()
             ) {
-                System.out.println("StoreFile : -----------------" + f.getFileName());
                 fileName.add(f.getFileName());
             }
             return fileName;
@@ -115,7 +111,6 @@ public class FileController {
                 resource) {
             sb.append("; filename=\"" + s + "\"");
         }
-        System.out.println(sb.toString());
         return sb.toString();
     }
 }

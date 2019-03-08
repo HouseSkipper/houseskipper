@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -21,11 +22,12 @@ public class TaskController {
     private PhaseRepository phaseRepository;
     private HistoricRepository historicRepository;
     private SubPhaseRepository subPhaseRepository;
+    private FileRepository fileRepository;
 
 
     public TaskController(TaskRepository repository, AuthenticatedUserService authenticatedUserService, PartieExacteRepository partieExacteRepository,
                           TypeSecondaireRepository typeSecondaireRepository, PhaseRepository phaseRepository, HistoricRepository historicRepository,
-                          SubPhaseRepository subPhaseRepository){
+                          SubPhaseRepository subPhaseRepository, FileRepository fileRepository){
 
         this.repository = repository;
         this.authenticatedUserService = authenticatedUserService;
@@ -34,18 +36,21 @@ public class TaskController {
         this.phaseRepository = phaseRepository;
         this.historicRepository = historicRepository;
         this.subPhaseRepository= subPhaseRepository;
+        this.fileRepository = fileRepository;
     }
 
     @GetMapping("tasks")
     public List<Task> tasksList(){
+
         for (Task t:
                 authenticatedUserService.getAuthenticatedUser().getTasks()) {
+
             t.setCurrentPhase(t.getStatus().getPhaseName());
             for (Historic h:
                  t.getHistorics()) {
                 h.setCurrentSubPhase(h.getSubPhase().getSPhaseName());
                 h.setCurrentPhase(h.getPhase().getPhaseName());
-                System.out.println(h.getSubPhase().getSPhaseName() + "=========");
+
             }
             for (Commentaire c:
                  t.getCommentaires()) {
@@ -58,34 +63,27 @@ public class TaskController {
     @PostMapping("tasks/next/{taskId}")
     public Task toNextPhase(@PathVariable String taskId, @Valid @RequestBody Task task)
     {
-       Task t = repository.findByNom(task.getNom()).get(0);
-        System.out.println(t.getStatus().getPhaseName() + "-)-)-)-)-)");
+       Task t = repository.findById(task.getId()).get();
 
-
-        if(t.getUser().equals(authenticatedUserService.getAuthenticatedUser())) {
+        if(t.getUser() == authenticatedUserService.getAuthenticatedUser()) {
             Phase p = phaseRepository.findByPhaseName(t.getStatus().getPhaseName());
-            System.out.println(phaseRepository.findAll().size());
-            System.out.println(p.getId());
             if (phaseRepository.findAll().size() > p.getId()){
                 Phase pnext =  phaseRepository.findById(new Long(p.getId()+1)).get();
-
                 t.setStatus(null);
                 t.setStatus(pnext);
                 t.setCurrentPhase(pnext.getPhaseName());
-                System.out.println(pnext.getPhaseName());
 
 
                 repository.saveAndFlush(t);
                 Historic h = new Historic();
-                h.setDate(LocalDate.now());
+                h.setDate(LocalDate.now(ZoneId.systemDefault()));
                 h.setTask(task);
                 h.setPhase(pnext);
                 h.setSubPhase(pnext.getSubPhase().get(1));
-                historicRepository.save(h);
+                historicRepository.saveAndFlush(h);
 
             }
 
-            System.out.println(repository.findById(task.getId()).get().getStatus().getPhaseName() + "-)-)-)-)-)");
             return repository.findById(task.getId()).get();
         }
 
@@ -104,7 +102,6 @@ public class TaskController {
                     task.setCurrentPhase(task.getStatus().getPhaseName());
                     task.setCurrentPhaseId(task.getStatus().getId());
                     task.getHistorics().get(task.getHistorics().size() - 1).setCurrentSubPhase(task.getHistorics().get(task.getHistorics().size() - 1).getSubPhase().getSPhaseName());
-                    System.out.println(task.getCurrentPhase() + ")))----" + task.getCurrentPhaseId());
                     for (Commentaire c:
                             task.getCommentaires()) {
                         c.setPhasec(c.getPhase().getPhaseName());
@@ -121,7 +118,7 @@ public class TaskController {
 
     @PostMapping("/tasks")
     public Task createTask(@Valid @RequestBody Task task) {
-        System.out.println(task);
+
         List<PartieExacte> partieExactes = task.getPartiesExacte();
         List<TypeSecondaire> typeSecondaires = task.getTypeSecondaires();
         List<Historic> historics = task.getHistorics();
@@ -131,16 +128,15 @@ public class TaskController {
         task.setTypeSecondaires(null);
         task.setCommentaires(null);
         Phase ph = phaseRepository.findByPhaseName("Redaction");
-        System.out.println(phaseRepository.findAll().size() + "°°°°°°°°°ààà");
         ApplicationUser user = authenticatedUserService.getAuthenticatedUser();
         task.setUser(user);
         task.setStatus(ph);
         //task.setStatus(ph);
-        Task t = repository.saveAndFlush(task);
+        Task t = repository.save(task);
 
 
         t.setStatus(ph);
-        Task k = repository.saveAndFlush(t);
+        Task k = repository.save(t);
         for (PartieExacte p:
                 partieExactes) {
             p.setTask(task);
@@ -155,17 +151,15 @@ public class TaskController {
             }
         }
         Historic h = new Historic();
-        h.setDate(LocalDate.now());
+        h.setDate(LocalDate.now(ZoneId.systemDefault()));
         h.setTask(task);
         h.setPhase(ph);
         for (SubPhase s:
              ph.getSubPhase()) {
-            System.out.println(s.getSPhaseName()+")))))))))))))°°°°");
 
         }
         h.setSubPhase(ph.getSubPhase().get(1));
         historicRepository.save(h);
-        System.out.println(k.getStatus().getPhaseName() + "°°°°°°°°°");
         return repository.findById(t.getId()).get();
 
     }
@@ -223,7 +217,9 @@ public class TaskController {
     @DeleteMapping("tasks/{taskId}")
     public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         return repository.findById(taskId).map(task -> {
-            repository.delete(task);
+            if (task.getUser() == authenticatedUserService.getAuthenticatedUser()){
+                repository.delete(task);
+            }
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("TaskId " + taskId + " not found"));
     }

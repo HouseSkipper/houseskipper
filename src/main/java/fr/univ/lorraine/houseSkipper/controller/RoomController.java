@@ -3,6 +3,7 @@ package fr.univ.lorraine.houseSkipper.controller;
 import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.House;
 import fr.univ.lorraine.houseSkipper.model.Room;
+import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +19,12 @@ public class RoomController {
 
     private RoomRepository repository;
     private AuthenticatedUserService authenticatedUserService;
+    private HouseRepository houseRepository;
 
-    public RoomController(RoomRepository repository, AuthenticatedUserService authenticatedUserService){
+    public RoomController(RoomRepository repository, AuthenticatedUserService authenticatedUserService, HouseRepository houseRepository){
         this.repository = repository;
         this.authenticatedUserService = authenticatedUserService;
+        this.houseRepository = houseRepository;
     }
 
     @GetMapping("/rooms")
@@ -47,11 +50,14 @@ public class RoomController {
         ApplicationUser user = this.authenticatedUserService.getAuthenticatedUser();
         List<House> houses = user.getHouses();
         List<Room> rooms = new ArrayList<>();
+        System.out.println(houseName);
         for (House h: houses
         ) {
-            if(houseName.contains(h.getHouseName())){
+            System.out.println(houseName + h.getHouseName());
+            if(houseName.equals(h.getHouseName())){
                 for (Room r: h.getRooms()
                 ) {
+                    System.out.println(houseName + h.getHouseName() + "=======");
                     r.setRoomName(r.getRoomName());
                     rooms.add(r);
                 }
