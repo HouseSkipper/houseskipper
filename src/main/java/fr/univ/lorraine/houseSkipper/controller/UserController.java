@@ -43,6 +43,7 @@ public class UserController {
     private EmailServiceImpl notificationService;
     @Autowired
     private HttpServletRequest request;
+    @Autowired
     private AuthenticatedUserService authenticatedUserService;
 
 
@@ -53,7 +54,6 @@ public class UserController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.houseRepository = houseRepository;
         this.roomRepository = roomRepository;
-        this.authenticatedUserService = authenticatedUserService;
     }
 
     @PostMapping("/sign-up")
@@ -92,22 +92,24 @@ public class UserController {
     @PutMapping("/update")
     public ApplicationUser update(@RequestBody ApplicationUser user) {
         ApplicationUser userApp = UserRepository.findByUsername(user.getUsername());
-        if(user.getUsername() != userApp.getUsername() && user.getUsername() != null)
+        if(!user.getUsername().equals(userApp.getUsername()) && user.getUsername() != null)
             userApp.setUsername(user.getUsername());
-        if(user.getFirstname() != userApp.getFirstname() && user.getFirstname() != null)
+        if(!user.getFirstname().equals(userApp.getFirstname()) && user.getFirstname() != null)
             userApp.setFirstname(user.getFirstname());
-        if(user.getLastname() != userApp.getLastname() && user.getLastname() != null)
+        if(!user.getLastname().equals(userApp.getLastname()) && user.getLastname() != null)
             userApp.setLastname(user.getLastname());
-        if(user.getTelephone() != userApp.getTelephone() && user.getTelephone() != null)
+        if(!user.getTelephone().equals(userApp.getTelephone()) && user.getTelephone() != null)
             userApp.setTelephone(user.getTelephone());
-        System.out.println("modif");
+        System.out.println("------" + user.getLastname());
         UserRepository.save(userApp);
         return userApp;
     }
 
     @GetMapping("{username}")
     public ApplicationUser fetchOneByUsername(@PathVariable String username) {
-        if (username == this.authenticatedUserService.getAuthenticatedUser().getUsername()) {
+        System.out.println("Username : " + username);
+        System.out.println("Authenti : " + this.authenticatedUserService.getAuthenticatedUser().getUsername());
+        if (username.equals(this.authenticatedUserService.getAuthenticatedUser().getUsername())) {
             return UserRepository.findByUsername(username);
         } else {
             System.out.println("**********************************************************");
