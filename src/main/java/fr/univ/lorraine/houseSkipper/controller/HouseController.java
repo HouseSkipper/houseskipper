@@ -159,4 +159,16 @@ public class HouseController {
         }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la suppression"));
     }
 
+    @DeleteMapping("/houses/file/{id}")
+    public ResponseEntity<?> deleteFileHouse(@PathVariable Long id) {
+        return this.fileRepository.findById(id).map(file -> {
+            if(file.getHouse().getUser() == this.authenticatedUserService.getAuthenticatedUser()){
+                this.fileRepository.delete(file);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la suppression"));
+    }
+
 }
