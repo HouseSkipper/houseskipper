@@ -26,10 +26,12 @@ public class CommentaireController {
 
     @PostMapping("commentaire/{id}")
     public Commentaire addComment(@PathVariable String id, @Valid @RequestBody Commentaire commentaire){
-        Task task = this.taskRepository.findByNom(id).get(0);
+        Task task = taskRepository.findById(Long.parseLong(id)).get();
         Phase phase = this.phaseRepository.findByPhaseName(commentaire.getPhasec());
         commentaire.setTask(task);
         commentaire.setPhase(phase);
-        return commentairesRepository.save(commentaire);
+        Task t = taskRepository.findById(Long.parseLong(id)).get();
+        commentairesRepository.save(commentaire);
+        return new Commentaire();
     }
 }
