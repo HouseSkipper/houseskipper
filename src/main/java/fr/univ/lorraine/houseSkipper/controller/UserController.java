@@ -13,6 +13,7 @@ import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.SkillRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import fr.univ.lorraine.houseSkipper.service.EmailServiceImpl;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class UserController {
     private EmailServiceImpl notificationService;
     @Autowired
     private HttpServletRequest request;
+    @Autowired
+    private AuthenticatedUserService authenticatedUserService;
+
 
     public UserController(UserRepository UserRepository, SkillRepository skillRepository,
                           BCryptPasswordEncoder bCryptPasswordEncoder, HouseRepository houseRepository, RoomRepository roomRepository) {
@@ -71,18 +75,48 @@ public class UserController {
             }
         }
     }
+/*
+    @PutMapping("/update")
+    public ApplicationUser update(@RequestBody ApplicationUser user) {
+        return UserRepository.findById(user.getId()).map(userApp -> {
+            if (userApp.getId() == this.authenticatedUserService.getAuthenticatedUser().getId()) {
+                userApp = user;
+                UserRepository.save(userApp);
+                return userApp;
+            } else {
+                return null;
+            }
+        }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la modification de l'utilisateur"));
+    }*/
 
     @PutMapping("/update")
-    public void update(@RequestBody ApplicationUser applicationUser) {
-        ApplicationUser user = UserRepository.findByUsername(applicationUser.getUsername());
-        if (user == null) {
-            throw new UserNameNotFoundException();
+    public ApplicationUser update(@RequestBody ApplicationUser user) {
+        ApplicationUser userApp = UserRepository.findByUsername(user.getUsername());
+        if(!user.getUsername().equals(userApp.getUsername()) && user.getUsername() != null)
+            userApp.setUsername(user.getUsername());
+        if(!user.getFirstname().equals(userApp.getFirstname()) && user.getFirstname() != null)
+            userApp.setFirstname(user.getFirstname());
+        if(!user.getLastname().equals(userApp.getLastname()) && user.getLastname() != null)
+            userApp.setLastname(user.getLastname());
+        if(!user.getTelephone().equals(userApp.getTelephone()) && user.getTelephone() != null)
+            userApp.setTelephone(user.getTelephone());
+        System.out.println("------" + user.getLastname());
+        UserRepository.save(userApp);
+        return userApp;
+    }
+
+    @GetMapping("{username}")
+    public ApplicationUser fetchOneByUsername(@PathVariable String username) {
+        System.out.println("Username : " + username);
+        System.out.println("Authenti : " + this.authenticatedUserService.getAuthenticatedUser().getUsername());
+        if (username.equals(this.authenticatedUserService.getAuthenticatedUser().getUsername())) {
+            return UserRepository.findByUsername(username);
         } else {
-            //applicationUser.setPassword(bCryptPasswordEncoder.encode(applicationUser.getPassword()));
-            System.out.println(applicationUser.toString());
-            UserRepository.save(applicationUser);
+            System.out.println("**********************************************************");
+            return null;
         }
     }
+
 
     @GetMapping("validateAccount/{emailToken}")
     public ApplicationUser validateAccount(@PathVariable String emailToken){

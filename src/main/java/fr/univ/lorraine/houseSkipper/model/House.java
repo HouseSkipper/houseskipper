@@ -3,12 +3,15 @@ package fr.univ.lorraine.houseSkipper.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import fr.univ.lorraine.houseSkipper.repositories.FileRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -48,6 +51,7 @@ public class House{
     private  int surfaceExterieurDroit;
     private  int surfaceExterieurGauche;
     private  int surfaceExterieurArriere;
+    private int nbDocument;
 
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     //@JsonIgnoreProperties("house")
@@ -62,11 +66,9 @@ public class House{
     @JsonBackReference
     private @NonNull ApplicationUser user;
 
-    @OneToMany(mappedBy = "house", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "house", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<UploadFileResponse> files = new ArrayList<>();
-
-
 
 }

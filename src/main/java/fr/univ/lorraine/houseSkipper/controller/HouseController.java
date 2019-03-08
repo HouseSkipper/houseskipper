@@ -4,6 +4,7 @@ import fr.univ.lorraine.houseSkipper.model.ApplicationUser;
 import fr.univ.lorraine.houseSkipper.model.House;
 import fr.univ.lorraine.houseSkipper.model.Room;
 import fr.univ.lorraine.houseSkipper.model.UploadFileResponse;
+import fr.univ.lorraine.houseSkipper.repositories.FileRepository;
 import fr.univ.lorraine.houseSkipper.repositories.HouseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.RoomRepository;
 import fr.univ.lorraine.houseSkipper.repositories.UserRepository;
@@ -11,6 +12,7 @@ import fr.univ.lorraine.houseSkipper.service.AuthenticatedUserService;
 import fr.univ.lorraine.houseSkipper.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +39,8 @@ public class HouseController {
     private AuthenticatedUserService authenticatedUserService;
     @Autowired
     private FileStorageService fileStorageService;
+    @Autowired
+    private FileRepository fileRepository;
 
     public HouseController(HouseRepository repository, RoomRepository roomRepository, UserRepository userRepository, AuthenticatedUserService authenticatedUserService) {
         this.houseRepository = repository;
@@ -87,7 +92,12 @@ public class HouseController {
 
     @GetMapping("/houses/house")
     public Collection<House> MyhousesList() {
-        return houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser()).stream().collect(Collectors.toList());
+        List<House> houses = houseRepository.findAllByUser(this.authenticatedUserService.getAuthenticatedUser());
+        for(House e: houses){
+            int taille = this.fileRepository.findAllByHouse(e).size();
+            e.setNbDocument(taille);
+        }
+        return houses;
     }
 
     @GetMapping("/houses/{houseId}")
@@ -99,6 +109,28 @@ public class HouseController {
                 return null;
             }
         }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la recherche d'une maison"));
+    }
+
+    @GetMapping("/houses/uploadFile/{houseId}")
+    public Collection<UploadFileResponse> MyFilesHouse(@PathVariable Long houseId) {
+        House house = houseRepository.findById(houseId).get();
+        if(house.getUser() == this.authenticatedUserService.getAuthenticatedUser()){
+            return this.fileRepository.findAllByHouse(house).stream().collect(Collectors.toList());
+        } else {
+            return new ArrayList<UploadFileResponse>();
+        }
+
+    }
+
+    @GetMapping("/houses/file/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id){
+        UploadFileResponse file = this.fileRepository.findById(id).get();
+        if (file.getHouse().getUser() == this.authenticatedUserService.getAuthenticatedUser()){
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                    .body(file.getPic());
+        }
+        return ResponseEntity.status(404).body(null);
     }
 
     @PutMapping("/houses/{houseId}")
@@ -120,6 +152,18 @@ public class HouseController {
         return houseRepository.findById(houseId).map(house -> {
             if (house.getUser().getId() == this.authenticatedUserService.getAuthenticatedUser().getId()) {
                 houseRepository.delete(house);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        }).orElseThrow(() -> new ResourceNotFoundException("Erreur lors de la suppression"));
+    }
+
+    @DeleteMapping("/houses/file/{id}")
+    public ResponseEntity<?> deleteFileHouse(@PathVariable Long id) {
+        return this.fileRepository.findById(id).map(file -> {
+            if(file.getHouse().getUser() == this.authenticatedUserService.getAuthenticatedUser()){
+                this.fileRepository.delete(file);
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.badRequest().build();
