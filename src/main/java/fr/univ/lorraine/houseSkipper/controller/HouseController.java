@@ -163,6 +163,7 @@ public class HouseController {
     public ResponseEntity<?> deleteFileHouse(@PathVariable Long id) {
         return this.fileRepository.findById(id).map(file -> {
             if(file.getHouse().getUser() == this.authenticatedUserService.getAuthenticatedUser()){
+                //this.fileRepository.deleteById(file.getId());
                 this.fileRepository.delete(file);
                 return ResponseEntity.ok().build();
             } else {
