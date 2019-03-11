@@ -1,8 +1,10 @@
 package fr.univ.lorraine.houseSkipper;
 
 import fr.univ.lorraine.houseSkipper.configuration.FileStorageProperties;
+import fr.univ.lorraine.houseSkipper.model.Interlocuteur;
 import fr.univ.lorraine.houseSkipper.model.Phase;
 import fr.univ.lorraine.houseSkipper.model.SubPhase;
+import fr.univ.lorraine.houseSkipper.repositories.InterlocuteurRepository;
 import fr.univ.lorraine.houseSkipper.repositories.PhaseRepository;
 import fr.univ.lorraine.houseSkipper.repositories.SubPhaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,8 @@ public class HouseSkipperApplication {
 	@Autowired
 	private SubPhaseRepository subPhaseRepository;
 
-
+	@Autowired
+	private InterlocuteurRepository interlocuteurRepository;
 
 	@Bean
 	public void initDB(){
@@ -34,6 +37,15 @@ public class HouseSkipperApplication {
 			if(phaseRepository.findAll().size() == 0 || subPhaseRepository.findAll().size() == 0)
 			{
 				createDB();
+			}
+			if(interlocuteurRepository.findAll().size() == 0){
+				interlocuteurRepository.save(new Interlocuteur("Paul Conducteur","","paul.conducteur@houseskippers.com","Conducteur de travaux"));
+				interlocuteurRepository.save(new Interlocuteur("Pierre Courtier","","pierre.courtier@houseskippers.com","Courtier en travaux"));
+				interlocuteurRepository.save(new Interlocuteur("Albert Conseiller","","albert.conseiller@houseskippers.com","Conseiller-Expert"));
+				interlocuteurRepository.save(new Interlocuteur("Denis Banque","","denis.banque@houseskippers.com","Contact banque"));
+				interlocuteurRepository.save(new Interlocuteur("Louis Assurance","","louis.assurance@houseskippers.com","Contact assurance"));
+				interlocuteurRepository.save(new Interlocuteur("Eric Juriste","","eric.juriste@houseskippers.com","Contact juriste"));
+				interlocuteurRepository.save(new Interlocuteur("Loïc Support","","loic.support@houseskippers.com","Agent de support"));
 			}
 		}catch (Exception e){
 
